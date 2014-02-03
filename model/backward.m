@@ -1,5 +1,5 @@
-function [alpha] = forward (N, L, PI, P, D, B)
-    % computation of the forward variable
+function [beta] = backward (N, L, PI, P, D, B)
+    % computation of the backward variable
     % N: number of states
     % L: number of observation symbols
     % PI: initial state probability vector. size N
@@ -9,21 +9,19 @@ function [alpha] = forward (N, L, PI, P, D, B)
     % result: matrix of coefficients. size N,L
 
     % initialize variables
-    alpha = zeros(N, L+1);
-    k = 1;
+    beta = zeros(N, L+1);
+    k = L;
 
     % compute V
     V = P.*D; % eq. 6.7
     V = V.*(ones(N)-eye(N)) + diag(1-(sum(V')' - diag(V))); % eq. 6.13
 
     % compute first elements
-    alpha(:, 1) = PI .* B(:, 1); % eq. 6.16
+    beta(:, L+1) = ones(N, 1); % eq. 6.40
 
-    % compute forward algorithm
-    while (k <= L),
-        %    (N, 1)   =  (N, 1)   .*       (1, N)  *  (N, N)
-        %             =  (N, 1)   .* (N, 1)
-        alpha(:, k+1) = B(:, k+1) .* (alpha(:, k)' * V)'; % eq. 6.16
-        k++;
+    % compute backward variable
+    while (k > 0),
+        beta(:, k) = V * (B(:, k+1) .* beta(:, k+1)); % eq 6.40
+        k--;
     end;
 end;

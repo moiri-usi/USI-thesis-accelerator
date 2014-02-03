@@ -11,6 +11,9 @@ B = rand(N,L+1)/N;
 % data processing
 
 % model training
+alpha = forward(N, L, PI, P, D, B);
+beta = backward(N, L, PI, P, D, B);
+gamma = alpha .* beta ./ repmat(diag(alpha' * beta)', N, 1);
 
 % online
 %%%%%%%%
