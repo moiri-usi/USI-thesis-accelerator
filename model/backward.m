@@ -15,7 +15,7 @@ function [beta] = backward (N, L, V, B)
 
     % compute backward variable
     while (k > 0),
-        beta(:, k) = V(:, :, k) * (B(:, k) .* beta(:, k+1)); % eq 6.40
+        beta(:, k) = V * (B(:, k) .* beta(:, k+1)); % eq 6.40
         k--;
     end;
     beta = beta(:, 2:end);

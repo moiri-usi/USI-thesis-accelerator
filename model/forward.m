@@ -18,7 +18,7 @@ function [alpha] = forward (N, L, PI, V, B)
     while (k <= L),
         %    (N, 1)   =  (N, 1)   .*       (1, N)  *  (N, N)
         %             =  (N, 1)   .* (N, 1)
-        alpha(:, k+1) = B(:, k) .* (alpha(:, k)' * V(:, :, k))'; % eq. 6.16
+        alpha(:, k+1) = B(:, k) .* (alpha(:, k)' * V)'; % eq. 6.16
         k++;
     end;
     alpha = alpha(:, 1:end-1);
