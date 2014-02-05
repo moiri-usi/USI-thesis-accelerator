@@ -1,33 +1,25 @@
 % configuration / initialisation
-% N: number of states
-N = 100;
-% M: number of observation symbols
-M = 30;
-% L: sequence length
-L = 200;
-% example sequence
-seq = randint(1, L, [1 M]);
-% alphabet (list of observation symbols)
-alphabet = [1:M];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+N = 100; % number of states
+M = 30; % number of observation symbols
+L = 200; % sequence length
+seq = randint(1, L, [1 M]); % example sequence
+alphabet = [1:M]; % alphabet (list of observation symbols)
 % PI: initial state probability vector. size N
 PI = rand(N, 1)/N;
 % P: matrix of limiting tansmission probabilities. size N, N
-P = rand(N)/N;
 % D: matrix of cumulative transition duration distribution functions. size N, N
-D = rand(N)/N;
+% G = P .* D;
+G = rand(N)/N;
 % B: matrix of emission probabilities. size N, M
-B = rand(N,M)/N;
-
-%compute B_comp (matrix to facilitate computation)
+B = rand(N,M);
+% compute B_comp (matrix to facilitate online/offline computation)
 B_comp = B(:, lookup(alphabet, seq));
-
-
 % compute V
-V = P.*D; % eq. 6.7
-V = V.*(ones(N)-eye(N)) + diag(1-(sum(V, 2) - diag(V))); % eq. 6.13
+V = G.*(ones(N)-eye(N)) + diag(1-(sum(G, 2) - diag(G))); % eq. 6.13
 
-% offline
-%%%%%%%%%
+% offline computation
+%%%%%%%%%%%%%%%%%%%%%
 % data processing
 
 % model training
@@ -50,9 +42,15 @@ ps = likelihood(alpha);
 % reassign PI
 PI = gamma(:, 1);
 % reassign B
+for m=1:M,
+    mask = repmat(seq == alphabet(m), [N, 1]);
+    B(:, m) = sum((gamma .* mask), 2) ./ sum(gamma, 2);
+end;
+% compute B_comp (matrix to facilitate online/offline computation)
+B_comp = B(:, lookup(alphabet, seq));
 
-% online
-%%%%%%%%
+% online computation
+%%%%%%%%%%%%%%%%%%%%
 % data processing
 
 % sequence processing with one model
