@@ -7,11 +7,11 @@ function [beta] = backward (N, L, V, B)
     % result: matrix of coefficients. size N,L
 
     % initialize variables
-    beta = zeros(N, L+1);
-    k = L;
+    beta = zeros(N, L);
+    k = L-1;
 
     % compute first elements
-    beta(:, L+1) = ones(N, 1); % eq. 6.40
+    beta(:, L) = ones(N, 1); % eq. 6.40
 
     % compute backward variable
     while (k > 0),
