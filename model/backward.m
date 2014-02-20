@@ -2,9 +2,9 @@ function [beta] = backward (N, L, V, B)
     % computation of the backward variable
     % N: number of states
     % L: number of observation symbols
-    % V: size N, N
+    % V: size N, N, L
     % B: matrix of emission probabilities. size N, L
-    % result: matrix of coefficients. size N,L
+    % result: matrix of coefficients. size N, L
 
     % initialize variables
     beta = zeros(N, L+1);
@@ -15,7 +15,7 @@ function [beta] = backward (N, L, V, B)
 
     % compute backward variable
     while (k > 0),
-        beta(:, k) = V * (B(:, k) .* beta(:, k+1)); % eq 6.40
+        beta(:, k) = V(:, :, k) * (B(:, k) .* beta(:, k+1)); % eq 6.40
         k--;
     end;
     beta = beta(:, 2:end);
