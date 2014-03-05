@@ -1,4 +1,4 @@
-function [beta] = backward (N, L, V, B)
+function [scale_coeff beta] = backward (N, L, V, B)
     % computation of the backward variable
     % N: number of states
     % L: number of observation symbols
@@ -7,16 +7,20 @@ function [beta] = backward (N, L, V, B)
     % result: matrix of coefficients. size N, L
 
     % initialize variables
-    beta = zeros(N, L+1);
+    beta = zeros(N, L);
+    scale_coeff = zeros(L, 1);
     k = L;
 
     % compute first elements
-    beta(:, L+1) = ones(N, 1); % eq. 6.40
+    beta(:, L) = ones(N, 1); % eq. 6.40
+    scale_coeff(L) = 1 / sum(beta(:, L), 1);
+    beta(:, L) *= scale_coeff(L);
 
     % compute backward variable
-    while (k > 0),
-        beta(:, k) = V(:, :, k) * (B(:, k) .* beta(:, k+1)); % eq 6.40
+    while (k > 1),
         k--;
+        beta(:, k) = V(:, :, k) * (B(:, k) .* beta(:, k+1)); % eq 6.40
+        scale_coeff(k) = 1 / sum(beta(:, k), 1);
+        beta(:, k) *= scale_coeff(k);
     end;
-    beta = beta(:, 2:end);
 end;
