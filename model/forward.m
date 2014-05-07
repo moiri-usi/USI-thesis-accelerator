@@ -21,7 +21,7 @@ function [scale_coeff alpha] = forward (N, L, PI, V, B)
     while (k < L),
         %    (N, 1)   =  (N, 1)   .*       (1, N)  *  (N, N)
         %             =  (N, 1)   .* (N, 1)
-        alpha(:, k+1) = B(:, k) .* (alpha(:, k)' * V(:, :, k))'; % eq. 6.16
+        alpha(:, k+1) = B(:, k+1) .* (alpha(:, k)' * V(:, :, k))'; % eq. 6.16
         scale_coeff(k+1) = 1 / sum(alpha(:, k+1), 1);
         alpha(:, k+1) *= scale_coeff(k+1);
         k++;
