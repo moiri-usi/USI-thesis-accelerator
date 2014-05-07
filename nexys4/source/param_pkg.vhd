@@ -9,4 +9,6 @@ package param_pkg is
     subtype PI_WIDTH is integer range 7 downto 0;
     subtype TP_WIDTH is integer range 7 downto 0;
     subtype ALPHA_WIDTH is integer range 7 downto 0;
+    subtype COEFF_WIDTH is integer range 7 downto 0;
+    subtype LPS_WIDTH is integer range 7 downto 0;
 end param_pkg;
