@@ -7,5 +7,5 @@ cdf_param = read_cdf();
 while(symb = read_next())
     dL = [dL(2:end); symb.d];
     oL = [oL(2:end); symb.o];
-    lPs = forward_s(N, L, PI, B, dL, oL, cdf_param);
+    lPs = forward_s(N, L, PI, B, cdf_param, oL, dL);
 end
