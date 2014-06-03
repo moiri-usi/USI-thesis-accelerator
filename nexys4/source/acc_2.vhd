@@ -5,13 +5,13 @@ use work.param_pkg.all;
 
 entity acc_2 is
     port(
-        in11:in std_logic_vector(MUL_OP1_WIDTH);
-        in12:in std_logic_vector(MUL_OP2_WIDTH);
-        in21:in std_logic_vector(MUL_OP1_WIDTH);
-        in22:in std_logic_vector(MUL_OP2_WIDTH);
-        acc1:out std_logic_vector(MUL_RES_WIDTH);
-        acc2:out std_logic_vector(MUL_RES_WIDTH);
-        res: out std_logic_vector(ACC_RES_WIDTH)
+        in11 : in  std_logic_vector(OP1_WIDTH);
+        in12 : in  std_logic_vector(OP2_WIDTH);
+        in21 : in  std_logic_vector(OP1_WIDTH);
+        in22 : in  std_logic_vector(OP2_WIDTH);
+        acc1 : out std_logic_vector(MUL_RES_WIDTH);
+        acc2 : out std_logic_vector(MUL_RES_WIDTH);
+        res  : out std_logic_vector(ACC_RES_WIDTH)
     );
 end acc_2;
 
