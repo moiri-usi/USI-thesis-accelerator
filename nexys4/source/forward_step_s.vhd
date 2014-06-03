@@ -8,13 +8,11 @@ entity forward_step_s is
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         sel_op1         : in  std_logic;
-        sel_op2         : in  std_logic;
         load_alpha_in   : in  std_logic;
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         load_macc       : in  std_logic;
-        B_in            : in  std_logic_vector(OP2_WIDTH);
-        TP_in           : in  std_logic_vector(OP2_WIDTH);
+        op2_in          : in  std_logic_vector(OP2_WIDTH);
         alpha_in        : in  ARRAY_OP1(N_RANGE);
         alpha_out       : out ARRAY_OP1(N_RANGE)
     );
@@ -24,7 +22,7 @@ Architecture forward_step_arch of forward_step_s is
 signal s_feed_back : std_logic_vector(MACC_WIDTH);
 signal s_mux : ARRAY_OP1(N_RANGE);
 signal s_reg_in : ARRAY_OP1(N_RANGE);
-signal s_reg_out : ARRAY_OP1(0 to N_CNT);
+signal s_reg_out : ARRAY_OP1(N_RANGE);
 signal s_op1 : std_logic_vector(OP1_WIDTH);
 signal s_op2 : std_logic_vector(OP2_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
@@ -50,15 +48,6 @@ component mux_2_op1 is
     );
 end component;
 
-component mux_2_op2 is
-    port(
-        sel       : in  std_logic;
-        data_in_1 : in  std_logic_vector(OP2_WIDTH);
-        data_in_2 : in  std_logic_vector(OP2_WIDTH);
-        data_out  : out std_logic_vector(OP2_WIDTH)
-    );
-end component;
-
 component reg_op1 is
     port ( 
         clk      : in  std_logic;
@@ -77,19 +66,12 @@ begin
         data_out  => s_op1
     );
 
-    mux_op2: mux_2_op2 port map (
-        sel       => sel_op2,
-        data_in_1 => TP_in,
-        data_in_2 => B_in,
-        data_out  => s_op2
-    );
-
     macc: macc_s port map (
         clk     => clk,
         reset_n => reset_n,
         load    => load_macc,
         op1     => s_op1,
-        op2     => s_op2,
+        op2     => op2_in,
         mul     => s_mul,
         macc    => s_feed_back
     );
@@ -123,17 +105,27 @@ begin
     end generate shift_reg1;
 
     --s_mul(MUL_LEAST_WIDTH) <= (others => '0');
-    s_reg_out(0) <= s_mul(MUL_MOST_WIDTH);
 
-    shift_reg2: for i in 1 to N_CNT generate
-        regk: reg_op1 port map(
-            clk      => clk,
-            reset_n  => reset_n,
-            load     => shift_alpha_out,
-            data_in  => s_reg_out(i-1),
-            data_out => s_reg_out(i)
-        );
+    shift_reg2: for i in N_RANGE generate
+        if0_out: if i = 0 generate
+            regk: reg_op1 port map(
+                clk      => clk,
+                reset_n  => reset_n,
+                load     => shift_alpha_out,
+                data_in  => s_mul(MUL_MOST_WIDTH),
+                data_out => s_reg_out(i)
+            );
+        end generate if0_out;
+        ifi_out: if i > 0 generate
+            regk: reg_op1 port map(
+                clk      => clk,
+                reset_n  => reset_n,
+                load     => shift_alpha_out,
+                data_in  => s_reg_out(i-1),
+                data_out => s_reg_out(i)
+            );
+        end generate ifi_out;
     end generate shift_reg2;
-    alpha_out <= s_reg_out(1 to N_CNT);
+    alpha_out <= s_reg_out;
 
 end forward_step_arch;

@@ -17,12 +17,13 @@ package param_pkg is
     subtype  MACC_MOST_WIDTH is integer range MACC_CNT-1 downto MACC_CNT-OP1_CNT;
     subtype  MACC_LEAST_WIDTH is integer range MACC_CNT-OP1_CNT-1 downto 0;
     -- Constants
-    constant N_CNT : integer := 2;
+    constant N_CNT : integer := 50;
     subtype  N_RANGE is integer range 0 to N_CNT-1;
-    constant L_CNT : integer := 3;
+    constant L_CNT : integer := 50;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     -- Array types
     type ARRAY_A   is array (natural range <>) of std_logic_vector(OP1_WIDTH);
     type ARRAY_TP  is array (natural range <>) of std_logic_vector(OP2_WIDTH);
     type ARRAY_OP1 is array (natural range <>) of std_logic_vector(OP1_WIDTH);
+    type MATRIX_OP1 is array (natural range <>) of ARRAY_OP1(N_RANGE);
 end param_pkg;
