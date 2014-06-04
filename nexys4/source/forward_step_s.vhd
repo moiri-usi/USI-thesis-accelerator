@@ -8,10 +8,12 @@ entity forward_step_s is
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         sel_op1         : in  std_logic;
+        sel_op1_zero    : in  std_logic;
         load_alpha_in   : in  std_logic;
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         load_macc       : in  std_logic;
+        flush           : in  std_logic;
         op2_in          : in  std_logic_vector(OP2_WIDTH);
         alpha_in        : in  ARRAY_OP1(N_RANGE);
         alpha_out       : out ARRAY_OP1(N_RANGE)
@@ -24,8 +26,10 @@ signal s_mux : ARRAY_OP1(N_RANGE);
 signal s_reg_in : ARRAY_OP1(N_RANGE);
 signal s_reg_out : ARRAY_OP1(N_RANGE);
 signal s_op1 : std_logic_vector(OP1_WIDTH);
+signal s_op1z : std_logic_vector(OP1_WIDTH);
 signal s_op2 : std_logic_vector(OP2_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
+signal s_reset : std_logic;
 
 component macc_s is
     port(
@@ -66,11 +70,20 @@ begin
         data_out  => s_op1
     );
 
+    mux_op1z: mux_2_op1 port map (
+        sel       => sel_op1_zero,
+        data_in_1 => s_op1,
+        data_in_2 => (others => '0'),
+        data_out  => s_op1z
+    );
+
+    s_reset <= reset_n and not(flush);
+
     macc: macc_s port map (
         clk     => clk,
-        reset_n => reset_n,
+        reset_n => s_reset,
         load    => load_macc,
-        op1     => s_op1,
+        op1     => s_op1z,
         op2     => op2_in,
         mul     => s_mul,
         macc    => s_feed_back

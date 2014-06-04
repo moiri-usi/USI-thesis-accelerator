@@ -7,6 +7,7 @@ entity forward_init_s is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
+        flush           : in  std_logic;
         PI_in           : in  std_logic_vector (OP1_WIDTH);
         B_in            : in  std_logic_vector (OP2_WIDTH);
         shift_alpha_out : in  std_logic;
@@ -18,6 +19,7 @@ end forward_init_s;
 architecture forward_init_arch of forward_init_s is
 signal s_reg_out : ARRAY_OP1(0 to N_CNT);
 signal s_mul : std_logic_vector(MUL_WIDTH);
+signal s_reset : std_logic;
 
 component mul_s is
     port(
@@ -41,10 +43,11 @@ component reg_op1 is
 end component;
 
 begin
+    s_reset <= reset_n and not(flush);
 
     mul: mul_s port map (
         clk     => clk,
-        reset_n => reset_n,
+        reset_n => s_reset,
         load    => load_mul,
         op1     => PI_in,
         op2     => B_in,
