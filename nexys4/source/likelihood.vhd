@@ -7,6 +7,8 @@ entity likelihood is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
+        enable          : in  std_logic;
+        flush           : in  std_logic;
         alpha_in        : in  ARRAY_OP1(N_RANGE);
         load_alpha_in   : in  std_logic;
         shift_alpha_in  : in  std_logic;
@@ -17,11 +19,13 @@ end likelihood;
 architecture likelihood_arch of likelihood is
 signal s_mux    : ARRAY_OP1(N_RANGE);
 signal s_reg_in : ARRAY_OP1(N_RANGE);
+signal s_reset  : std_logic;
 
 component acc_s is
     port (
         clk     : in  std_logic;
         reset_n : in  std_logic;
+        enable  : in  std_logic;
         alpha   : in  std_logic_vector(OP1_WIDTH);
         Ps      : out std_logic_vector(OP1_WIDTH)
     );
@@ -47,9 +51,12 @@ component reg_op1 is
 end component;
 
 begin
+    s_reset <= reset_n and not(flush);
+
     acc: acc_s port map (
         clk     => clk,
-        reset_n => reset_n,
+        reset_n => s_reset,
+        enable  => enable,
         alpha   => s_reg_in(N_CNT-1),
         Ps      => Ps
     );

@@ -15,14 +15,14 @@ package param_pkg is
     subtype  MUL_LEAST_WIDTH is integer range MUL_CNT-OP1_CNT-1 downto 0;
     constant MACC_CNT : integer := 48;
     subtype  MACC_WIDTH is integer range MACC_CNT-1 downto 0;
-    subtype  MACC_MOST_WIDTH is integer range MACC_CNT-1 downto MACC_CNT-OP1_CNT;
-    subtype  MACC_LEAST_WIDTH is integer range MACC_CNT-OP1_CNT-1 downto 0;
+    subtype  MACC_MOST_WIDTH is integer range MUL_CNT-1 downto MUL_CNT-OP1_CNT;
+    subtype  MACC_LEAST_WIDTH is integer range MUL_CNT-OP1_CNT-1 downto 0;
     -- Constants
-    constant N_CNT : integer := 10;
+    constant N_CNT : integer := 3;
     subtype  N_RANGE is integer range 0 to N_CNT-1;
     constant N_LOG_CNT : integer := integer(ceil(log2(real(N_CNT))));
     subtype  N_LOG_RANGE is integer range N_LOG_CNT-1 downto 0;
-    constant L_CNT : integer := 10;
+    constant L_CNT : integer := 3;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     -- Array types
     type ARRAY_A   is array (natural range <>) of std_logic_vector(OP1_WIDTH);
