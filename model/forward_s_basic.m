@@ -8,7 +8,7 @@
 % @param TP:            transistion probabilities. size N, N
 % @return Ps:           probability likelihood
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [Ps] = forward_basic_s(N, L, PI, B, TP, oL)
+function [Ps] = forward_s_basic(N, L, PI, B, TP, oL)
     % initialize forward variables
     for i=1:N,
         alpha(i) = PI(i)*B(i, oL(1));
