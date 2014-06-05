@@ -22,24 +22,6 @@ signal s_sel_op1, s_sel_op1_zero, s_sel_op2, s_load_alpha_in, s_shift_alpha_in,
     s_shift_alpha_out, s_enable_step, s_enable_init, s_flush, s_flush_Ps, 
     s_enable_final, s_reset_out, s_load_out : std_logic;
 
---component rom_B is
---port (
---    B_out : out std_logic_vector (OP2_WIDTH)
---);
---end component;
---
---component rom_PI is
---port (
---    PI_out : out std_logic_vector (OP1_WIDTH)
---);
---end component;
---
---component rom_TP is
---port (
---    TP_out : out std_logic_vector (OP2_WIDTH)
---);
---end component;
-
 component forward_ctrl is
     port(
         clk             : in  std_logic;
@@ -132,17 +114,6 @@ port (
 end component;
 
 begin 
-    --romB: rom_B port map (
-    --    B_out => s_B
-    --);
-
-    --romPI: rom_PI port map (
-    --    PI_out => s_PI
-    --);
-
-    --romTP: rom_TP port map (
-    --    TP_out => s_TP
-    --);
     s_PI <= PI_in;
     s_B <= B_in;
     s_TP <= TP_in;
