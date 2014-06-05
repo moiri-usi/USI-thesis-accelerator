@@ -15,7 +15,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="34" />
+   <WVObjectSize size="25" />
    <wvobject fp_name="/forward_s/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -121,81 +121,6 @@
          </wvobject>
       </wvobject>
    </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_reg_in" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_reg_in[0:2]</obj_property>
-      <obj_property name="ObjectShortName">s_reg_in[0:2]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/alpha_in" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">alpha_in[0:2]</obj_property>
-      <obj_property name="ObjectShortName">alpha_in[0:2]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_reg_out" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_reg_out[0:2]</obj_property>
-      <obj_property name="ObjectShortName">s_reg_out[0:2]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/alpha_out" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">alpha_out[0:2]</obj_property>
-      <obj_property name="ObjectShortName">alpha_out[0:2]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_op1" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_op1[24:0]</obj_property>
-      <obj_property name="ObjectShortName">s_op1[24:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#00ffff</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_op1z" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_op1z[24:0]</obj_property>
-      <obj_property name="ObjectShortName">s_op1z[24:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#00ffff</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_op1" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_reg_op1[24:0]</obj_property>
-      <obj_property name="ObjectShortName">s_reg_op1[24:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#00ffff</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/s_op2" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_op2[17:0]</obj_property>
-      <obj_property name="ObjectShortName">s_op2[17:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/s_op2_reg" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_op2_reg[17:0]</obj_property>
-      <obj_property name="ObjectShortName">s_op2_reg[17:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_mul" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_reg_mul[42:0]</obj_property>
-      <obj_property name="ObjectShortName">s_reg_mul[42:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_mul" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_mul[42:0]</obj_property>
-      <obj_property name="ObjectShortName">s_mul[42:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_acc" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_reg_acc[47:0]</obj_property>
-      <obj_property name="ObjectShortName">s_reg_acc[47:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_feed_back" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_feed_back[47:0]</obj_property>
-      <obj_property name="ObjectShortName">s_feed_back[47:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_reset" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">s_reset</obj_property>
       <obj_property name="ObjectShortName">s_reset</obj_property>
@@ -279,5 +204,68 @@
       <obj_property name="ObjectShortName">current_state</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/forward_s/s_op2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_op2[17:0]</obj_property>
+      <obj_property name="ObjectShortName">s_op2[17:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+   </wvobject>
+   <wvobject fp_name="/forward_s/s_op2_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_op2_reg[17:0]</obj_property>
+      <obj_property name="ObjectShortName">s_op2_reg[17:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+   </wvobject>
+   <wvobject fp_name="group46" type="group">
+      <obj_property name="label">step 1 signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/forward_s/\u1(0)\/if0/init/pi_in" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">pi_in[24:0]</obj_property>
+         <obj_property name="ObjectShortName">pi_in[24:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/\u1(0)\/if0/init/b_in" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">b_in[17:0]</obj_property>
+         <obj_property name="ObjectShortName">b_in[17:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group45" type="group">
+      <obj_property name="label">step 2 signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_op1" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s_op1[24:0]</obj_property>
+         <obj_property name="ObjectShortName">s_op1[24:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#00ffff</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_op1z" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s_op1z[24:0]</obj_property>
+         <obj_property name="ObjectShortName">s_op1z[24:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#00ffff</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_op1" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s_reg_op1[24:0]</obj_property>
+         <obj_property name="ObjectShortName">s_reg_op1[24:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#00ffff</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_mul" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s_reg_mul[42:0]</obj_property>
+         <obj_property name="ObjectShortName">s_reg_mul[42:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_acc" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s_reg_acc[47:0]</obj_property>
+         <obj_property name="ObjectShortName">s_reg_acc[47:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
    </wvobject>
 </wave_config>
