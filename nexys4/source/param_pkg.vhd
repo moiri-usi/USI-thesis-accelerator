@@ -24,6 +24,10 @@ package param_pkg is
     subtype  N_LOG_RANGE is integer range N_LOG_CNT-1 downto 0;
     constant L_CNT : integer := 3;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
+    constant M_CNT : integer := 2;
+    subtype  M_RANGE is integer range 0 to M_CNT-1;
+    constant M_LOG_CNT : integer := integer(ceil(log2(real(M_CNT))));
+    subtype  M_LOG_RANGE is integer range M_LOG_CNT-1 downto 0;
     -- Array types
     type ARRAY_A   is array (natural range <>) of std_logic_vector(OP1_WIDTH);
     type ARRAY_TP  is array (natural range <>) of std_logic_vector(OP2_WIDTH);

@@ -13,7 +13,7 @@ entity forward_step_s is
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
         sel_op1         : in  std_logic;
-        sel_op1_zero    : in  std_logic;
+        conciliate      : in  std_logic;
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
@@ -99,7 +99,7 @@ begin
     );
 
     mux_op1z: mux_2_op1 port map (
-        sel       => sel_op1_zero,
+        sel       => conciliate,
         data_in_1 => s_op1,
         data_in_2 => (others => '0'),
         data_out  => s_op1z
