@@ -3,6 +3,7 @@ isim force add reset_n 0
 isim force add tp_we 0
 isim force add pi_we 0
 isim force add b_we 0
+isim force add shift_in 1
 isim force add data_ready 0
 run 10ns
 isim force add reset_n 1
@@ -40,58 +41,32 @@ run 10ns
 isim force add tp_we 0
 run 190ns
 
-
-isim force add tp_we 1
-isim force add b_we 1
-isim force add tp_in 191627
-isim force add b_in 87244
-run 10ns
-isim force add tp_in 3386
-isim force add b_in 12928
-run 10ns
-isim force add tp_in 67129
-isim force add b_in 161970
-run 10ns
-isim force add b_we 0
-isim force add tp_in 41300
-run 10ns
-isim force add tp_in 119888
-run 10ns
-isim force add tp_in 100954
-run 10ns
-isim force add tp_in 34
-run 10ns
-isim force add tp_in 7636
-run 10ns
-isim force add tp_in 254473
-run 10ns
-isim force add tp_we 0
-run 190ns
-
-
-isim force add tp_we 1
-isim force add b_we 1
-isim force add tp_in 191627
-isim force add b_in 87244
-run 10ns
-isim force add tp_in 3386
-isim force add b_in 12928
-run 10ns
-isim force add tp_in 67129
-isim force add b_in 161970
-run 10ns
-isim force add b_we 0
-isim force add tp_in 41300
-run 10ns
-isim force add tp_in 119888
-run 10ns
-isim force add tp_in 100954
-run 10ns
-isim force add tp_in 34
-run 10ns
-isim force add tp_in 7636
-run 10ns
-isim force add tp_in 254473
-run 10ns
-isim force add tp_we 0
-run 230ns
+for {set i 0} {$i < 3} {incr i} {
+    isim force add tp_we 1
+    isim force add b_we 1
+    isim force add tp_in 191627
+    isim force add b_in 87244
+    run 10ns
+    isim force add tp_in 3386
+    isim force add b_in 12928
+    run 10ns
+    isim force add tp_in 67129
+    isim force add b_in 161970
+    run 10ns
+    isim force add b_we 0
+    isim force add tp_in 41300
+    run 10ns
+    isim force add tp_in 119888
+    run 10ns
+    isim force add tp_in 100954
+    run 10ns
+    isim force add tp_in 34
+    run 10ns
+    isim force add tp_in 7636
+    run 10ns
+    isim force add tp_in 254473
+    run 10ns
+    isim force add tp_we 0
+    run 190ns
+}
+run 40ns
