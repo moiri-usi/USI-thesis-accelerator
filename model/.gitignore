@@ -1,3 +1,4 @@
 *.swp
 *.log
 octave-core
+octave-workspace

@@ -9,7 +9,7 @@
 % @param alpha_new:     forward variables of step k. size N
 % @return scale_coeff:  scaling coefficient of step k
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [alpha_new scale_coeff] = forward_s_step.m(N, dk, alpha, B, cdf_param)
+function [alpha_new scale_coeff] = forward_s_step(N, dk, alpha, B, cdf_param)
     % compute transistion probabilities
     tp = compute_tp(N, dk, cdf_param);
     % compute forward algorithm

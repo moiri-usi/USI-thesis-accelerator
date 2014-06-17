@@ -4,7 +4,7 @@ OP1_WIDTH = 25;
 OP2_WIDTH = 18;
 N = 3; % number of states
 M = 1; % number of observation symbols
-L = 300; % sequence length
+L = 3; % sequence length
 seq_e = randint(1, L, [1 M]); % example sequence
 alphabet = [1:M]; % alphabet (list of observation symbols)
 % PI: initial state probability vector. size N
@@ -17,17 +17,14 @@ for i=1:N,
 end
 % B: matrix of emission probabilities
 %B = abs(rand(N, M))/N; % size N, M
-%B(1, 1) = 0.33281;
-%B(2, 1) = 0.04932;
-%B(3, 1) = 0.61787;
-B(1, 1) = 0.50000;
-B(2, 1) = 0.50000;
-B(3, 1) = 0.50000;
-for i=1:N,
-    for j=1:M,
-        B_dec(i, j) = float2myDec(B(i, j), OP2_WIDTH);
-    end
-end
+B(1, 1) = 1;
+B(2, 1) = 1;
+B(3, 1) = 1;
+%for i=1:N,
+%    for j=1:M,
+%        B_dec(i, j) = float2myDec(B(i, j), OP2_WIDTH);
+%    end
+%end
 % P: matrix of limiting tansmission probabilities
 %TP = abs(rand(N, N))/N; % size N, N
 TP(1,1) = 0.73100; % size N, N
@@ -50,7 +47,7 @@ alpha = zeros(N, L);
 % ==============================================================================
 tic;
 %for i=1:10,
-    Ps = forward_s_basic(N, L, PI, B, TP, seq_e)
+    Ps = forward_s_scaling(N, L, PI, B, TP, seq_e)
 %end
 toc;
 
