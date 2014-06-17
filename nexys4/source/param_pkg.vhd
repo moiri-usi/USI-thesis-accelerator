@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
-use IEEE.math_real.all;
+use ieee.math_real.all;
 
 package param_pkg is
     -- Signal Widths
@@ -24,7 +24,7 @@ package param_pkg is
     subtype  N_LOG_RANGE is integer range N_LOG_CNT-1 downto 0;
     constant L_CNT : integer := 3;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
-    constant M_CNT : integer := 2;
+    constant M_CNT : integer := 1000;
     subtype  M_RANGE is integer range 0 to M_CNT-1;
     constant M_LOG_CNT : integer := integer(ceil(log2(real(M_CNT))));
     subtype  M_LOG_RANGE is integer range M_LOG_CNT-1 downto 0;

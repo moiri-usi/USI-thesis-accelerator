@@ -16,6 +16,7 @@ entity forward_s is
         tp_we      : in  std_logic;
         pi_in      : in  std_logic_vector(OP1_WIDTH);
         pi_we      : in  std_logic;
+        shift_in   : in  std_logic_vector(OP2_WIDTH);
         data_ready : in  std_logic;
         ps_out     : out std_logic_vector(OP1_WIDTH)
     );
@@ -27,10 +28,12 @@ signal s_pi : std_logic_vector(OP1_WIDTH);
 signal s_pi_addr : std_logic_vector(N_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_pi_we : std_logic_vector(0 downto 0);
-signal s_conciliate, s_shift_alpha_in, s_shift_alpha_out, s_sel_read_fifo,
-    s_enable_step, s_enable_step_c, s_enable_init, s_enable_init_c,
-    s_enable_final, s_enable_final_c, s_flush, s_reset,
-    s_read_op, s_read_tp, s_enable_cnt : std_logic;
+signal s_mux4_op2 : std_logic_vector(1 downto 0);
+signal s_shift_alpha_in, s_shift_alpha_out, s_read_op, s_read_tp,
+    s_enable_macc, s_enable_mul, s_enable_shift, s_enable_acc, s_enable_cnt,
+    s_enable_init, s_enable_step, s_enable_final,
+    s_conciliate, s_flush, s_reset,
+    s_sel_op1, s_sel_read_fifo : std_logic;
 
 component ram_N_op1 is
     port(
@@ -77,15 +80,6 @@ component counter_N is
     );
 end component;
 
-component mux_2_op2 is
-    port(
-        sel       : in  std_logic;
-        data_in_1 : in  std_logic_vector(OP2_WIDTH);
-        data_in_2 : in  std_logic_vector(OP2_WIDTH);
-        data_out  : out std_logic_vector(OP2_WIDTH)
-    );
-end component;
-
 component reg_op2 is
     port ( 
         clk      : in  std_logic;
@@ -108,9 +102,10 @@ component forward_ctrl is
         shift_alpha_out : out std_logic;
         read_op         : out std_logic;
         read_tp         : out std_logic;
-        enable_step     : out std_logic;
-        enable_init     : out std_logic;
-        enable_final    : out std_logic
+        enable_macc     : out std_logic;
+        enable_mul      : out std_logic;
+        enable_shift    : out std_logic;
+        enable_acc      : out std_logic
     );
 end component;
 
@@ -158,6 +153,10 @@ end component;
 begin 
     s_reset <= not(reset_n);
     s_pi_we(0) <= pi_we;
+    s_enable_step <= data_ready and
+        (s_enable_macc or s_enable_mul or s_enable_shift or s_conciliate);
+    s_enable_init <= data_ready and s_enable_mul;
+    s_enable_final <= data_ready and s_enable_acc;
 
     ram_pi: ram_N_op1 port map (
         clka  => clk,
@@ -198,12 +197,12 @@ begin
         count    => s_pi_addr
     );
 
-    mux_op2: mux_2_op2 port map (
-        sel             => s_enable_init,
-        data_in_1       => s_tp,
-        data_in_2       => s_b,
-        data_out        => s_op2
-    );
+    s_mux4_op2 <= (s_enable_mul or s_enable_shift) & s_enable_shift;
+    with s_mux4_op2 select
+        s_op2 <= s_tp     when "00",
+                 s_tp     when "01",
+                 s_b      when "10",
+                 shift_in when "11";
 
     reg: reg_op2 port map (
         clk             => clk,
@@ -224,14 +223,13 @@ begin
         shift_alpha_out => s_shift_alpha_out,
         read_op         => s_read_op,
         read_tp         => s_read_tp,
-        enable_step     => s_enable_step,
-        enable_init     => s_enable_init,
-        enable_final    => s_enable_final
+        enable_macc     => s_enable_macc,
+        enable_mul      => s_enable_mul,
+        enable_shift    => s_enable_shift,
+        enable_acc      => s_enable_acc
     );
 
-    s_enable_init_c <= data_ready and s_enable_init;
-    s_enable_step_c <= data_ready and s_enable_step;
-    s_enable_final_c <= data_ready and s_enable_final;
+    s_sel_op1 <= s_enable_mul and s_enable_shift;
 
     u1: for k in L_RANGE generate
         if0: if k = 0 generate
@@ -241,7 +239,7 @@ begin
                 flush           => s_flush,
                 pi_in           => s_pi,
                 b_in            => s_b,
-                enable          => s_enable_init_c,
+                enable          => s_enable_init,
                 alpha_out       => s_alpha(k)
             );
         end generate if0;
@@ -250,13 +248,13 @@ begin
                 clk             => clk,
                 reset_n         => reset_n,
                 sel_read_fifo   => s_sel_read_fifo,
-                sel_op1         => s_enable_init_c,
+                sel_op1         => s_sel_op1,
                 conciliate      => s_conciliate,
                 shift_alpha_in  => s_shift_alpha_in,
                 shift_alpha_out => s_shift_alpha_out,
-                enable          => s_enable_step_c,
+                enable          => s_enable_step,
                 flush_macc      => s_flush,
-                flush_fifo      => s_enable_final_c,
+                flush_fifo      => s_enable_final,
                 op2_in          => s_op2_reg,
                 alpha_in        => s_alpha(k-1),
                 alpha_out       => s_alpha(k)
@@ -268,7 +266,7 @@ begin
         clk             => clk,
         reset_n         => reset_n,
         load            => s_shift_alpha_out,
-        enable          => s_enable_final_c,
+        enable          => s_enable_final,
         alpha_in        => s_alpha(L_CNT-1),
         ps              => ps_out
     );

@@ -30,6 +30,7 @@ signal s_feed_back : std_logic_vector(MACC_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
 signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in, s_op1,
     s_op1z : std_logic_vector(OP1_WIDTH);
+signal s_mux4_op1 : std_logic_vector(1 downto 0);
 signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
     s_reset_macc, s_fifo0_rst, s_fifo1_rst : std_logic;
 
@@ -42,15 +43,6 @@ component macc_s is
         op2     : in  std_logic_vector(OP2_WIDTH);
         mul     : out std_logic_vector(MUL_WIDTH);
         macc    : out std_logic_vector(MACC_WIDTH)
-    );
-end component;
-
-component mux_2_op1 is
-    port(
-        sel       : in  std_logic;
-        data_in_1 : in  std_logic_vector(OP1_WIDTH);
-        data_in_2 : in  std_logic_vector(OP1_WIDTH);
-        data_out  : out std_logic_vector(OP1_WIDTH)
     );
 end component;
 
@@ -70,40 +62,24 @@ end component;
 begin
     sel_read_fifo_n <= not(sel_read_fifo);
 
-    mux_fb: mux_2_op1 port map (
-        sel       => sel_op1,
-        data_in_1 => s_fifo_out,
-        data_in_2 => s_feed_back(MACC_MOST_WIDTH),
-        data_out  => s_op1
-    );
+    s_mux4_op1 <= sel_op1 & conciliate;
+    with s_mux4_op1 select
+        s_op1z <= s_fifo_out                   when "00",
+                  (others => '0')              when "01",
+                  s_feed_back(MACC_MOST_WIDTH) when "10",
+                  s_mul(MUL_MOST_WIDTH)        when "11";
 
-    mux_fifo0_in: mux_2_op1 port map (
-        sel       => sel_read_fifo,
-        data_in_1 => s_fifo0_out,
-        data_in_2 => alpha_in,
-        data_out  => s_fifo0_in
-    );
+    with sel_read_fifo select
+        s_fifo0_in <= s_fifo0_out when '0',
+                      alpha_in    when '1';
 
-    mux_fifo1_in: mux_2_op1 port map (
-        sel       => sel_read_fifo_n,
-        data_in_1 => s_fifo1_out,
-        data_in_2 => alpha_in,
-        data_out  => s_fifo1_in
-    );
+    with sel_read_fifo_n select
+        s_fifo1_in <= s_fifo1_out when '0',
+                      alpha_in    when '1';
 
-    mux_fifo_out: mux_2_op1 port map (
-        sel       => sel_read_fifo,
-        data_in_1 => s_fifo0_out,
-        data_in_2 => s_fifo1_out,
-        data_out  => s_fifo_out
-    );
-
-    mux_op1z: mux_2_op1 port map (
-        sel       => conciliate,
-        data_in_1 => s_op1,
-        data_in_2 => (others => '0'),
-        data_out  => s_op1z
-    );
+    with sel_read_fifo select
+        s_fifo_out <= s_fifo0_out when '0',
+                      s_fifo1_out when '1';
 
     s_reset_macc <= reset_n and not(flush_macc);
 
