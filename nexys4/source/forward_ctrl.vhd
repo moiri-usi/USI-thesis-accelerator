@@ -79,8 +79,8 @@ begin
             --    reset_cnt1 <= TRUE;
             --    next_state <= st_mul;
             end if;
-            enable_macc    <= '1';
-            --conciliate  <= '1';
+            --enable_macc    <= '1';
+            conciliate  <= '1';
 
         when st_shift =>
             next_state <= st_shift;

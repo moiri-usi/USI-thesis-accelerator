@@ -12,8 +12,7 @@ entity forward_step_s is
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
-        sel_op1         : in  std_logic;
-        conciliate      : in  std_logic;
+        sel_op1         : in  std_logic_vector(1 downto 0);
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
@@ -28,8 +27,8 @@ end forward_step_s;
 Architecture forward_step_arch of forward_step_s is
 signal s_feed_back : std_logic_vector(MACC_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
-signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in, s_op1,
-    s_op1z : std_logic_vector(OP1_WIDTH);
+signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in,
+    s_op1 : std_logic_vector(OP1_WIDTH);
 signal s_mux4_op1 : std_logic_vector(1 downto 0);
 signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
     s_reset_macc, s_fifo0_rst, s_fifo1_rst : std_logic;
@@ -62,12 +61,12 @@ end component;
 begin
     sel_read_fifo_n <= not(sel_read_fifo);
 
-    s_mux4_op1 <= sel_op1 & conciliate;
-    with s_mux4_op1 select
-        s_op1z <= s_fifo_out                   when "00",
-                  (others => '0')              when "01",
-                  s_feed_back(MACC_MOST_WIDTH) when "10",
-                  s_mul(MUL_MOST_WIDTH)        when "11";
+    with sel_op1 select
+        s_op1 <= s_fifo_out                   when "00",
+                 (others => '0')              when "01",
+                 s_mul(MUL_LEAST_WIDTH)       when "10",
+                 s_feed_back(MACC_MOST_WIDTH) when "11",
+                 (others => '0')              when others;
 
     with sel_read_fifo select
         s_fifo0_in <= s_fifo0_out when '0',
@@ -87,7 +86,7 @@ begin
         clk     => clk,
         reset_n => s_reset_macc,
         enable  => enable,
-        op1     => s_op1z,
+        op1     => s_op1,
         op2     => op2_in,
         mul     => s_mul,
         macc    => s_feed_back

@@ -28,12 +28,12 @@ signal s_pi : std_logic_vector(OP1_WIDTH);
 signal s_pi_addr : std_logic_vector(N_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_pi_we : std_logic_vector(0 downto 0);
-signal s_mux4_op2 : std_logic_vector(1 downto 0);
+signal s_mux4_op1, s_mux4_op2 : std_logic_vector(1 downto 0);
 signal s_shift_alpha_in, s_shift_alpha_out, s_read_op, s_read_tp,
     s_enable_macc, s_enable_mul, s_enable_shift, s_enable_acc, s_enable_cnt,
     s_enable_init, s_enable_step, s_enable_final,
     s_conciliate, s_flush, s_reset,
-    s_sel_op1, s_sel_read_fifo : std_logic;
+    s_sel_read_fifo : std_logic;
 
 component ram_N_op1 is
     port(
@@ -126,8 +126,7 @@ component forward_step_s is
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
-        sel_op1         : in  std_logic;
-        conciliate      : in  std_logic;
+        sel_op1         : in  std_logic_vector(1 downto 0);
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
@@ -157,6 +156,11 @@ begin
         (s_enable_macc or s_enable_mul or s_enable_shift or s_conciliate);
     s_enable_init <= data_ready and s_enable_mul;
     s_enable_final <= data_ready and s_enable_acc;
+
+    s_mux4_op1 <= (s_enable_mul or s_enable_shift)
+                  & (s_conciliate or s_enable_shift);
+    s_mux4_op2 <= (s_enable_mul or s_enable_shift)
+                  & s_enable_shift;
 
     ram_pi: ram_N_op1 port map (
         clka  => clk,
@@ -197,12 +201,12 @@ begin
         count    => s_pi_addr
     );
 
-    s_mux4_op2 <= (s_enable_mul or s_enable_shift) & s_enable_shift;
     with s_mux4_op2 select
-        s_op2 <= s_tp     when "00",
-                 s_tp     when "01",
-                 s_b      when "10",
-                 shift_in when "11";
+        s_op2 <= s_tp            when "00",
+                 s_tp            when "01",
+                 s_b             when "10",
+                 shift_in        when "11",
+                 (others => '0') when others;
 
     reg: reg_op2 port map (
         clk             => clk,
@@ -229,8 +233,6 @@ begin
         enable_acc      => s_enable_acc
     );
 
-    s_sel_op1 <= s_enable_mul and s_enable_shift;
-
     u1: for k in L_RANGE generate
         if0: if k = 0 generate
             init: forward_init_s port map (
@@ -248,8 +250,7 @@ begin
                 clk             => clk,
                 reset_n         => reset_n,
                 sel_read_fifo   => s_sel_read_fifo,
-                sel_op1         => s_sel_op1,
-                conciliate      => s_conciliate,
+                sel_op1         => s_mux4_op1,
                 shift_alpha_in  => s_shift_alpha_in,
                 shift_alpha_out => s_shift_alpha_out,
                 enable          => s_enable_step,
