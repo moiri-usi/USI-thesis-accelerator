@@ -135,6 +135,12 @@
          <obj_property name="UseCustomSignalColor">true</obj_property>
          <obj_property name="CustomSignalColor">#ffff00</obj_property>
       </wvobject>
+      <wvobject fp_name="/forward_s/s_shift_acc" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_shift_acc</obj_property>
+         <obj_property name="ObjectShortName">s_shift_acc</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
       <wvobject fp_name="/forward_s/s_read_tp" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">s_read_tp</obj_property>
          <obj_property name="ObjectShortName">s_read_tp</obj_property>
@@ -144,6 +150,36 @@
       <wvobject fp_name="/forward_s/s_read_op" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">s_read_op</obj_property>
          <obj_property name="ObjectShortName">s_read_op</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/s_enable_macc" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_enable_macc</obj_property>
+         <obj_property name="ObjectShortName">s_enable_macc</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/s_enable_mul" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_enable_mul</obj_property>
+         <obj_property name="ObjectShortName">s_enable_mul</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/s_enable_shift1" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_enable_shift1</obj_property>
+         <obj_property name="ObjectShortName">s_enable_shift1</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/s_enable_shift2" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_enable_shift2</obj_property>
+         <obj_property name="ObjectShortName">s_enable_shift2</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      </wvobject>
+      <wvobject fp_name="/forward_s/s_enable_acc" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">s_enable_acc</obj_property>
+         <obj_property name="ObjectShortName">s_enable_acc</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
          <obj_property name="CustomSignalColor">#ffff00</obj_property>
       </wvobject>
@@ -334,13 +370,6 @@
          <obj_property name="UseCustomSignalColor">true</obj_property>
          <obj_property name="CustomSignalColor">#00ffff</obj_property>
       </wvobject>
-      <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/s_op1z" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">s_op1z[24:0]</obj_property>
-         <obj_property name="ObjectShortName">s_op1z[24:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-         <obj_property name="CustomSignalColor">#00ffff</obj_property>
-      </wvobject>
       <wvobject fp_name="/forward_s/\u1(1)\/ifk/stepk/macc/s_reg_op1" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">s_reg_op1[24:0]</obj_property>
          <obj_property name="ObjectShortName">s_reg_op1[24:0]</obj_property>
@@ -429,13 +458,6 @@
       <wvobject fp_name="/forward_s/\u1(2)\/ifk/stepk/s_op1" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">s_op1[24:0]</obj_property>
          <obj_property name="ObjectShortName">s_op1[24:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-         <obj_property name="CustomSignalColor">#00ffff</obj_property>
-      </wvobject>
-      <wvobject fp_name="/forward_s/\u1(2)\/ifk/stepk/s_op1z" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">s_op1z[24:0]</obj_property>
-         <obj_property name="ObjectShortName">s_op1z[24:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
          <obj_property name="CustomSignalColor">#00ffff</obj_property>

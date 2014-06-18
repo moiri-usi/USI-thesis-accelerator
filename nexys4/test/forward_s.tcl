@@ -69,4 +69,4 @@ for {set i 0} {$i < 3} {incr i} {
     isim force add tp_we 0
     run 190ns
 }
-run 40ns
+run 400ns

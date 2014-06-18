@@ -17,6 +17,7 @@ package param_pkg is
     subtype  MACC_WIDTH is integer range MACC_CNT-1 downto 0;
     subtype  MACC_MOST_WIDTH is integer range MUL_CNT-1 downto MUL_CNT-OP1_CNT;
     subtype  MACC_LEAST_WIDTH is integer range OP1_CNT-1 downto 0;
+    subtype  MACC_LOW_WIDTH is integer range OP2_CNT-1 downto 0;
     -- Constants
     constant N_CNT : integer := 3;
     subtype  N_RANGE is integer range 0 to N_CNT-1;

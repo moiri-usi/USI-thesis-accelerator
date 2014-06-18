@@ -13,18 +13,20 @@ entity forward_ctrl is
         conciliate      : out std_logic;
         shift_alpha_in  : out std_logic;
         shift_alpha_out : out std_logic;
+        shift_acc       : out std_logic;
         read_op         : out std_logic;
         read_tp         : out std_logic;
         enable_macc     : out std_logic;
         enable_mul      : out std_logic;
-        enable_shift    : out std_logic;
+        enable_shift1   : out std_logic;
+        enable_shift2   : out std_logic;
         enable_acc      : out std_logic
     );
 end forward_ctrl;
 
 architecture sm of forward_ctrl is
-    type state is (st_init, st_select, st_macc, st_conciliate, st_shift,
-        st_mul, st_store, st_flush);
+    type state is (st_init, st_select, st_macc, st_conciliate, st_shift1,
+        st_shift2, st_mul, st_store, st_flush);
     signal current_state, next_state : state;
     signal cnt1, cnt2 : integer;
     signal reset_cnt1, reset_cnt2, switch_fifo : boolean;
@@ -36,11 +38,13 @@ begin
         conciliate      <= '0';
         shift_alpha_in  <= '0';
         shift_alpha_out <= '0';
+        shift_acc       <= '0';
         read_op         <= '0';
         read_tp         <= '0';
         enable_macc     <= '0';
         enable_mul      <= '0';
-        enable_shift    <= '0';
+        enable_shift1   <= '0';
+        enable_shift2   <= '0';
         enable_acc      <= '0';
         next_state  <= st_init;
         reset_cnt1  <= FALSE;
@@ -73,22 +77,21 @@ begin
         when st_conciliate =>
             next_state <= st_conciliate;
             if cnt1 = 1 then
-                next_state <= st_shift;
-                reset_cnt1 <= TRUE;
-            --elsif cnt1 = 3 then
-            --    reset_cnt1 <= TRUE;
-            --    next_state <= st_mul;
-            end if;
-            --enable_macc    <= '1';
-            conciliate  <= '1';
-
-        when st_shift =>
-            next_state <= st_shift;
-            if cnt1 = 1 then
+                next_state <= st_shift1;
+            elsif cnt1 = 5 then
+                shift_acc <= '1';
                 reset_cnt1 <= TRUE;
                 next_state <= st_mul;
             end if;
-            enable_shift <= '1';
+            conciliate  <= '1';
+
+        when st_shift1 =>
+            next_state <= st_shift2;
+            enable_shift1 <= '1';
+
+        when st_shift2 =>
+            next_state <= st_conciliate;
+            enable_shift2 <= '1';
 
         when st_mul =>
             next_state <= st_mul;
@@ -113,7 +116,7 @@ begin
         end case;
     end process;
 
-    process(clk, reset_n, reset_cnt1, reset_cnt2, s_sel_read_fifo)
+    process(clk, reset_n, reset_cnt1, enable, s_sel_read_fifo)
     begin
         sel_read_fifo <= s_sel_read_fifo;
         if reset_n = '0' then

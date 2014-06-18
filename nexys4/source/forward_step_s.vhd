@@ -8,15 +8,17 @@ library unisim;
 use unisim.vcomponents.all;
 
 entity forward_step_s is
-    port ( 
+    port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
-        sel_op1         : in  std_logic_vector(1 downto 0);
+        sel_op1         : in  std_logic_vector(2 downto 0);
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
         flush_macc      : in  std_logic;
+        flush_acc       : in  std_logic;
+        shift_acc       : in  std_logic;
         flush_fifo      : in  std_logic;
         op2_in          : in  std_logic_vector(OP2_WIDTH);
         alpha_in        : in  std_logic_vector(OP1_WIDTH);
@@ -35,26 +37,28 @@ signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
 
 component macc_s is
     port(
-        clk     : in  std_logic;
-        reset_n : in  std_logic;
-        enable  : in  std_logic;
-        op1     : in  std_logic_vector(OP1_WIDTH);
-        op2     : in  std_logic_vector(OP2_WIDTH);
-        mul     : out std_logic_vector(MUL_WIDTH);
-        macc    : out std_logic_vector(MACC_WIDTH)
+        clk       : in  std_logic;
+        reset_n   : in  std_logic;
+        flush_acc : in  std_logic;
+        shift_acc : in  std_logic;
+        enable    : in  std_logic;
+        op1       : in  std_logic_vector(OP1_WIDTH);
+        op2       : in  std_logic_vector(OP2_WIDTH);
+        mul       : out std_logic_vector(MUL_WIDTH);
+        macc      : out std_logic_vector(MACC_WIDTH)
     );
 end component;
 
 component fifo_N_op1 is
     port(
-           clk   : in  std_logic;
-           rst   : in  std_logic;
-           wr_en : in  std_logic;
-           rd_en : in  std_logic;
-           din   : in  std_logic_vector(OP1_WIDTH);
-           dout  : out std_logic_vector(OP1_WIDTH);
-           full  : out std_logic;
-           empty : out std_logic
+        clk   : in  std_logic;
+        rst   : in  std_logic;
+        wr_en : in  std_logic;
+        rd_en : in  std_logic;
+        din   : in  std_logic_vector(OP1_WIDTH);
+        dout  : out std_logic_vector(OP1_WIDTH);
+        full  : out std_logic;
+        empty : out std_logic
     );
 end component;
 
@@ -62,11 +66,13 @@ begin
     sel_read_fifo_n <= not(sel_read_fifo);
 
     with sel_op1 select
-        s_op1 <= s_fifo_out                   when "00",
-                 (others => '0')              when "01",
-                 s_mul(MUL_LEAST_WIDTH)       when "10",
-                 s_feed_back(MACC_MOST_WIDTH) when "11",
-                 (others => '0')              when others;
+        s_op1 <= s_fifo_out                       when "000",  -- next alpha
+                 s_feed_back(MACC_MOST_WIDTH)     when "001",  -- higher part to shift
+                 (OP1_CNT-OP2_CNT-1 downto 0 => '0')
+        --         "0000000"
+                    & s_feed_back(MACC_LOW_WIDTH) when "010",  -- lower part to shift
+                 s_feed_back(MACC_LEAST_WIDTH)    when "100",  -- shiftet val to mul
+                 (others => '0')                  when others; -- conciliate
 
     with sel_read_fifo select
         s_fifo0_in <= s_fifo0_out when '0',
@@ -83,13 +89,15 @@ begin
     s_reset_macc <= reset_n and not(flush_macc);
 
     macc: macc_s port map (
-        clk     => clk,
-        reset_n => s_reset_macc,
-        enable  => enable,
-        op1     => s_op1,
-        op2     => op2_in,
-        mul     => s_mul,
-        macc    => s_feed_back
+        clk       => clk,
+        reset_n   => s_reset_macc,
+        shift_acc => shift_acc,
+        flush_acc => flush_acc,
+        enable    => enable,
+        op1       => s_op1,
+        op2       => op2_in,
+        mul       => s_mul,
+        macc      => s_feed_back
     );
 
     s_fifo0_we <= (shift_alpha_in and sel_read_fifo_n)
