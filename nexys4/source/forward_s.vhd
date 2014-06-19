@@ -8,17 +8,17 @@ use unisim.vcomponents.all;
 
 entity forward_s is
     port(
-        clk        : in  std_logic;
-        reset_n    : in  std_logic;
-        b_in       : in  std_logic_vector(OP2_WIDTH);
-        b_we       : in  std_logic;
-        tp_in      : in  std_logic_vector(OP2_WIDTH);
-        tp_we      : in  std_logic;
-        pi_in      : in  std_logic_vector(OP1_WIDTH);
-        pi_we      : in  std_logic;
-        shift_in   : in  std_logic_vector(OP2_WIDTH);
-        data_ready : in  std_logic;
-        ps_out     : out std_logic_vector(OP1_WIDTH)
+        clk          : in  std_logic;
+        reset_n      : in  std_logic;
+        b_in         : in  std_logic_vector(OP2_WIDTH);
+        b_we         : in  std_logic;
+        tp_in        : in  std_logic_vector(OP2_WIDTH);
+        tp_we        : in  std_logic;
+        pi_in        : in  std_logic_vector(OP1_WIDTH);
+        pi_we        : in  std_logic;
+        data_ready   : in  std_logic;
+        ps_scale_out : out std_logic_vector(OP2_WIDTH);
+        ps_out       : out std_logic_vector(OP1_WIDTH)
     );
 end forward_s;
 
@@ -27,13 +27,14 @@ signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
 signal s_pi_addr : std_logic_vector(N_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
+signal s_lzc : ARRAY_OP2(L_RANGE);
 signal s_pi_we : std_logic_vector(0 downto 0);
-signal s_mux4_op2 : std_logic_vector(1 downto 0);
 signal s_mux8_op1 : std_logic_vector(2 downto 0);
+signal s_mux2_op2 : std_logic;
 signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
-    s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_acc,
-    s_enable_cnt, s_enable_init, s_enable_step, s_enable_final,
-    s_conciliate, s_flush, s_reset,
+    s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_shift,
+    s_enable_acc, s_enable_cnt, s_enable_init, s_enable_step, s_enable_final,
+    s_conciliate, s_flush, s_flush_acc, s_reset,
     s_sel_read_fifo : std_logic;
 
 component ram_N_op1 is
@@ -97,6 +98,7 @@ component forward_ctrl is
         reset_n         : in  std_logic;
         enable          : in  std_logic;
         flush           : out std_logic;
+        flush_acc       : out std_logic;
         sel_read_fifo   : out std_logic;
         conciliate      : out std_logic;
         shift_alpha_in  : out std_logic;
@@ -130,6 +132,7 @@ component forward_step_s is
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
         sel_op1         : in  std_logic_vector(2 downto 0);
+        sel_op2         : in  std_logic;
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
@@ -139,6 +142,8 @@ component forward_step_s is
         flush_fifo      : in  std_logic;
         op2_in          : in  std_logic_vector(OP2_WIDTH);
         alpha_in        : in  std_logic_vector(OP1_WIDTH);
+        lzc_in          : in  std_logic_vector(OP2_WIDTH);
+        lzc_out         : out std_logic_vector(OP2_WIDTH);
         alpha_out       : out std_logic_vector(OP1_WIDTH)
     );
 end component;
@@ -161,11 +166,11 @@ begin
         or s_enable_shift1 or s_enable_shift2 or s_conciliate);
     s_enable_init <= data_ready and s_enable_mul;
     s_enable_final <= data_ready and s_enable_acc;
+    s_enable_shift <= s_enable_shift1 or s_enable_shift2;
 
     s_mux8_op1 <= s_enable_mul & (s_enable_shift1 or s_conciliate)
                   & (s_enable_shift2 or s_conciliate);
-    s_mux4_op2 <= (s_enable_mul or s_enable_shift1 or s_enable_shift2)
-                  & (s_enable_shift1 or s_enable_shift2);
+    s_mux2_op2 <= s_enable_mul;
 
     ram_pi: ram_N_op1 port map (
         clka  => clk,
@@ -206,12 +211,9 @@ begin
         count    => s_pi_addr
     );
 
-    with s_mux4_op2 select
-        s_op2 <= s_tp            when "00",
-                 s_tp            when "01",
-                 s_b             when "10",
-                 shift_in        when "11",
-                 (others => '0') when others;
+    with s_mux2_op2 select
+        s_op2 <= s_tp when '0',
+                 s_b  when others;
 
     reg: reg_op2 port map (
         clk             => clk,
@@ -226,6 +228,7 @@ begin
         reset_n         => reset_n,
         enable          => data_ready,
         flush           => s_flush,
+        flush_acc       => s_flush_acc,
         sel_read_fifo   => s_sel_read_fifo,
         conciliate      => s_conciliate,
         shift_alpha_in  => s_shift_alpha_in,
@@ -239,6 +242,8 @@ begin
         enable_shift2   => s_enable_shift2,
         enable_acc      => s_enable_acc
     );
+
+    s_lzc(0) <= (OP2_CNT-1 downto 1 => '0') & '1';
 
     u1: for k in L_RANGE generate
         if0: if k = 0 generate
@@ -258,19 +263,24 @@ begin
                 reset_n         => reset_n,
                 sel_read_fifo   => s_sel_read_fifo,
                 sel_op1         => s_mux8_op1,
+                sel_op2         => s_enable_shift,
                 shift_alpha_in  => s_shift_alpha_in,
                 shift_alpha_out => s_shift_alpha_out,
                 enable          => s_enable_step,
                 flush_macc      => s_flush,
-                flush_acc       => s_enable_shift2,
+                flush_acc       => s_flush_acc,
                 shift_acc       => s_shift_acc,
                 flush_fifo      => s_enable_final,
                 op2_in          => s_op2_reg,
                 alpha_in        => s_alpha(k-1),
+                lzc_in          => s_lzc(k-1),
+                lzc_out         => s_lzc(k),
                 alpha_out       => s_alpha(k)
             );
         end generate ifk;
     end generate u1;
+
+    ps_scale_out <= s_lzc(L_CNT-1);
 
     u2: likelihood port map (
         clk             => clk,

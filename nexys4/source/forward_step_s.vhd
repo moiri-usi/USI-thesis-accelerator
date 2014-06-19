@@ -1,6 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
@@ -13,6 +12,7 @@ entity forward_step_s is
         reset_n         : in  std_logic;
         sel_read_fifo   : in  std_logic;
         sel_op1         : in  std_logic_vector(2 downto 0);
+        sel_op2         : in  std_logic;
         shift_alpha_in  : in  std_logic;
         shift_alpha_out : in  std_logic;
         enable          : in  std_logic;
@@ -22,18 +22,23 @@ entity forward_step_s is
         flush_fifo      : in  std_logic;
         op2_in          : in  std_logic_vector(OP2_WIDTH);
         alpha_in        : in  std_logic_vector(OP1_WIDTH);
+        lzc_in          : in  std_logic_vector(OP2_WIDTH);
+        lzc_out         : out std_logic_vector(OP2_WIDTH);
         alpha_out       : out std_logic_vector(OP1_WIDTH)
     );
 end forward_step_s;
 
-Architecture forward_step_arch of forward_step_s is
+architecture forward_step_arch of forward_step_s is
 signal s_feed_back : std_logic_vector(MACC_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
 signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in,
     s_op1 : std_logic_vector(OP1_WIDTH);
+signal s_op2, s_lzc_out : std_logic_vector(OP2_WIDTH);
+signal s_reg_lzc_new, s_reg_lzc_last : std_logic_vector(OP2_WIDTH) := "100000000000000000";
 signal s_mux4_op1 : std_logic_vector(1 downto 0);
 signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
-    s_reset_macc, s_fifo0_rst, s_fifo1_rst : std_logic;
+    s_reset_macc, s_fifo0_rst, s_fifo1_rst, s_sel_lzc,
+    s_load_reg2, s_reset_reg1 : std_logic;
 
 component macc_s is
     port(
@@ -46,6 +51,31 @@ component macc_s is
         op2       : in  std_logic_vector(OP2_WIDTH);
         mul       : out std_logic_vector(MUL_WIDTH);
         macc      : out std_logic_vector(MACC_WIDTH)
+    );
+end component;
+
+component lzc_op2 is
+    port(
+        data_in  : in  std_logic_vector(OP2_WIDTH);
+        data_out : out std_logic_vector(OP2_WIDTH)
+    );
+end component;
+
+component reg_op2 is
+    port ( 
+        clk      : in  std_logic;
+        reset_n  : in  std_logic;
+        load     : in  std_logic;
+        data_in  : in  std_logic_vector(OP2_WIDTH);
+        data_out : out std_logic_vector(OP2_WIDTH)
+    );
+end component;
+
+component sel_lzc_op2 is
+    port (
+        data_in : in  std_logic_vector(OP2_WIDTH);
+        ref_in  : in  std_logic_vector(OP2_WIDTH);
+        sel_new : out std_logic
     );
 end component;
 
@@ -69,22 +99,25 @@ begin
         s_op1 <= s_fifo_out                       when "000",  -- next alpha
                  s_feed_back(MACC_MOST_WIDTH)     when "001",  -- higher part to shift
                  (OP1_CNT-OP2_CNT-1 downto 0 => '0')
-        --         "0000000"
                     & s_feed_back(MACC_LOW_WIDTH) when "010",  -- lower part to shift
                  s_feed_back(MACC_LEAST_WIDTH)    when "100",  -- shiftet val to mul
                  (others => '0')                  when others; -- conciliate
 
+    with sel_op2 select
+        s_op2 <= op2_in when '0',
+                 lzc_in when others;
+
     with sel_read_fifo select
         s_fifo0_in <= s_fifo0_out when '0',
-                      alpha_in    when '1';
+                      alpha_in    when others;
 
     with sel_read_fifo_n select
         s_fifo1_in <= s_fifo1_out when '0',
-                      alpha_in    when '1';
+                      alpha_in    when others;
 
     with sel_read_fifo select
         s_fifo_out <= s_fifo0_out when '0',
-                      s_fifo1_out when '1';
+                      s_fifo1_out when others;
 
     s_reset_macc <= reset_n and not(flush_macc);
 
@@ -95,9 +128,53 @@ begin
         flush_acc => flush_acc,
         enable    => enable,
         op1       => s_op1,
-        op2       => op2_in,
+        op2       => s_op2,
         mul       => s_mul,
         macc      => s_feed_back
+    );
+
+    lzc: lzc_op2 port map (
+        data_in  => s_mul(MUL_LZC_WIDTH),
+        data_out => s_lzc_out
+    );
+
+    reg0: reg_op2 port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        load     => shift_alpha_out,
+        data_in  => s_lzc_out,
+        data_out => s_reg_lzc_new
+    );
+    
+    process(clk)
+    begin
+        if(clk = '1' and clk'event) then
+            s_reset_reg1 <= not(flush_fifo);
+        end if;
+    end process;
+
+    s_reset_reg1 <= not(flush_fifo);
+    reg1: reg_op2 port map (
+        clk      => clk,
+        reset_n  => s_reset_reg1,
+        load     => s_sel_lzc,
+        data_in  => s_reg_lzc_new,
+        data_out => s_reg_lzc_last
+    );
+
+    s_load_reg2 <= flush_fifo;
+    reg2: reg_op2 port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        load     => s_load_reg2,
+        data_in  => s_reg_lzc_last,
+        data_out => lzc_out
+    );
+
+    sel_lzc: sel_lzc_op2 port map (
+        data_in => s_reg_lzc_new,
+        ref_in  => s_reg_lzc_last,
+        sel_new => s_sel_lzc
     );
 
     s_fifo0_we <= (shift_alpha_in and sel_read_fifo_n)

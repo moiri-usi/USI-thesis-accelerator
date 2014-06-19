@@ -9,6 +9,7 @@ entity forward_ctrl is
         reset_n         : in  std_logic;
         enable          : in  std_logic;
         flush           : out std_logic;
+        flush_acc       : out std_logic;
         sel_read_fifo   : out std_logic;
         conciliate      : out std_logic;
         shift_alpha_in  : out std_logic;
@@ -35,6 +36,7 @@ begin
     process(reset_n, current_state, cnt1, cnt2)
     begin
         flush           <= '0';
+        flush_acc       <= '0';
         conciliate      <= '0';
         shift_alpha_in  <= '0';
         shift_alpha_out <= '0';
@@ -78,6 +80,8 @@ begin
             next_state <= st_conciliate;
             if cnt1 = 1 then
                 next_state <= st_shift1;
+            elsif cnt1 = 4 then
+                enable_shift2 <= '1';
             elsif cnt1 = 5 then
                 shift_acc <= '1';
                 reset_cnt1 <= TRUE;
@@ -92,6 +96,7 @@ begin
         when st_shift2 =>
             next_state <= st_conciliate;
             enable_shift2 <= '1';
+            flush_acc     <= '1';
 
         when st_mul =>
             next_state <= st_mul;
