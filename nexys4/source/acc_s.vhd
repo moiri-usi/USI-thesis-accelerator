@@ -9,14 +9,14 @@ entity acc_s is
         reset_n : in  std_logic;
         enable  : in  std_logic;
         alpha   : in  std_logic_vector (OP1_WIDTH);
-        Ps      : out std_logic_vector (OP1_WIDTH)
+        ps      : out std_logic_vector (OP1_WIDTH)
     );
 end acc_s;
 
 architecture acc of acc_s is
     signal s_reg_op : std_logic_vector (OP1_WIDTH);
 begin
-    Ps <= s_reg_op;
+    ps <= s_reg_op;
     process(clk, reset_n, enable)
     begin
         if reset_n = '0' then
