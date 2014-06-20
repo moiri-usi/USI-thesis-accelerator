@@ -1,6 +1,7 @@
 library ieee;
-use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
 entity likelihood is
@@ -19,6 +20,7 @@ end likelihood;
 architecture likelihood_arch of likelihood is
 signal s_ps1, s_ps2 : std_logic_vector(OP1_WIDTH);
 signal s_reset, s_reset_delay, s_enable_delay : std_logic;
+signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 
 component acc_s is
     port (
@@ -77,11 +79,13 @@ begin
         data_out => ps_out
     );
 
+    s_ps_scale <= ps_scale_in
+        - std_logic_vector(to_unsigned(OP2_CNT, SCALE_CNT));
     reg1: reg_scale port map (
         clk      => clk,
         reset_n  => reset_n,
         load     => s_enable_delay,
-        data_in  => ps_scale_in,
+        data_in  => s_ps_scale,
         data_out => ps_scale_out
     );
 
