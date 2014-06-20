@@ -195,7 +195,7 @@ component likelihood is
     );
 end component;
 
-begin 
+begin
     s_reset <= not(reset_n);
     s_pi_we(0) <= pi_we;
     s_enable_init <= data_ready and s_enable_mul;

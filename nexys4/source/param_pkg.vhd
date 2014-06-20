@@ -36,6 +36,7 @@ package param_pkg is
     subtype  M_RANGE is integer range 0 to M_CNT-1;
     constant M_LOG_CNT : integer := integer(ceil(log2(real(M_CNT))));
     subtype  M_LOG_RANGE is integer range 0 to M_LOG_CNT-1;
+    subtype  M_LOG_WIDTH is integer range M_LOG_CNT-1 downto 0;
     constant SCALE_CNT : integer := integer(ceil(log2(real(M_LOG_CNT))))+integer(L_LOG_CNT);
     subtype  SCALE_WIDTH is integer range SCALE_CNT-1 downto 0;
     type ARRAY_SCALE is array (natural range <>) of std_logic_vector(SCALE_WIDTH);
