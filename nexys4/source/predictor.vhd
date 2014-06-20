@@ -7,7 +7,7 @@ entity predictor is
     port(
         clk          : in    std_logic;
         reset_n      : in    std_logic;
-        event        : in    std_logic_vector(M_LOG_WIDTH);
+        symbol       : in    std_logic_vector(M_LOG_WIDTH);
         fail_predict : out   std_logic;
     -- ram
         RamCLK       : out   std_logic;
@@ -110,7 +110,7 @@ begin
         MemDB   => MemDB,
         MemAdr  => MemAdr,
         sel_ram => s_sel_ram,
-        b_sel   => event,
+        b_sel   => symbol,
         b_out   => s_b,
         b_we    => s_b_we
     );
