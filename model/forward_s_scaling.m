@@ -41,6 +41,7 @@ function [lPs] = forward_s_scaling(N, L, PI, B, TP, oL)
         for i=1:N,
             alpha_new(i) *= scale_coeff(k);
         end
+        alpha = alpha_new;
     end
     % compute log likelihood
     lPs = 0;
