@@ -87,6 +87,8 @@ end component;
 
 component classification is
     port(
+        clk          : in  std_logic;
+        reset_n      : in  std_logic;
         ps1_in       : in  std_logic_vector(OP1_WIDTH);
         ps_scale1_in : in  std_logic_vector(SCALE_WIDTH);
         ps2_in       : in  std_logic_vector(OP1_WIDTH);
@@ -163,6 +165,8 @@ begin
     );
 
     class: classification port map(
+        clk          => clk,
+        reset_n      => reset_n,
         ps1_in       => s_ps0,
         ps_scale1_in => s_ps_scale0,
         ps2_in       => s_ps1,

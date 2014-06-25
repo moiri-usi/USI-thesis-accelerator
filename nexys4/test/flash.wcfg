@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/moiri/Documents/usi/thesis/accelerator/nexys4/ise/flash/flash_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="flash" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="25" />
+   <wvobject fp_name="/flash/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/reset_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reset_n</obj_property>
+      <obj_property name="ObjectShortName">reset_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/read_reg" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">read_reg</obj_property>
+      <obj_property name="ObjectShortName">read_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/reg_type" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg_type[2:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_type[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/o_reg_type" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">o_reg_type[2:0]</obj_property>
+      <obj_property name="ObjectShortName">o_reg_type[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/o_reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_reset</obj_property>
+      <obj_property name="ObjectShortName">o_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/o_read_reg" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_read_reg</obj_property>
+      <obj_property name="ObjectShortName">o_read_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/reg_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/qspidb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">qspidb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">qspidb[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/qspicsn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">qspicsn</obj_property>
+      <obj_property name="ObjectShortName">qspicsn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/current_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">current_state</obj_property>
+      <obj_property name="ObjectShortName">current_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/next_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">next_state</obj_property>
+      <obj_property name="ObjectShortName">next_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/current_action" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">current_action</obj_property>
+      <obj_property name="ObjectShortName">current_action</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/s_inst" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_inst[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_inst[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/s_reg_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_reg_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_reg_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/s_cs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">s_cs</obj_property>
+      <obj_property name="ObjectShortName">s_cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">cnt</obj_property>
+      <obj_property name="ObjectShortName">cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/reset_cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">reset_cnt</obj_property>
+      <obj_property name="ObjectShortName">reset_cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/write_bus" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">write_bus</obj_property>
+      <obj_property name="ObjectShortName">write_bus</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/read_bus" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">read_bus</obj_property>
+      <obj_property name="ObjectShortName">read_bus</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/rdcr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rdcr[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdcr[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/rdsr1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rdsr1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdsr1[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/rdsr2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rdsr2[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdsr2[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/wren" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wren[7:0]</obj_property>
+      <obj_property name="ObjectShortName">wren[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/flash/rdid" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rdid[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdid[7:0]</obj_property>
+   </wvobject>
+</wave_config>
