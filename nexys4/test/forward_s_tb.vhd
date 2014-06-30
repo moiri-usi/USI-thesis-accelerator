@@ -7,7 +7,7 @@ use work.param_pkg.all;
 entity forward_s_tb is
     port(
         clk          : in  std_logic;
-        reset        : in  std_logic;
+        reset_n      : in  std_logic;
         mode         : in  std_logic;
         step         : in  std_logic;
         reset_led    : out std_logic;
@@ -23,7 +23,6 @@ architecture tb of forward_s_tb is
 signal s_dispVal : std_logic_vector(63 downto 0);
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 signal s_ps : std_logic_vector(OP1_WIDTH);
-signal reset_n : std_logic;
 type ARRAY_VAL is array (natural range <>) of std_logic_vector(3 downto 0);
 signal s_seg : ARRAY_VAL(0 to 7);
 type ARRAY_SEG is array (natural range <>) of std_logic_vector(7 downto 0);
@@ -72,10 +71,10 @@ component sSegDisplay is
 end component;
 
 begin
-    reset_led <= reset;
+    reset_led <= not(reset_n);
     mode_led <= mode;
-    reset_n <= not(reset);
     ps_scale <= s_ps_scale;
+
     forward: forward_s port map(
         clk          => clk,
         reset_n      => reset_n,
