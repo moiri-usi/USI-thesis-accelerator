@@ -26,7 +26,7 @@ architecture forward_arch of forward_s is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
 signal s_op_addr, s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
-signal s_tp_addr : std_logic_vector(NN_LOG_RANGE);
+signal s_tp_w_addr, s_tp_r_addr : std_logic_vector(NN_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_lzc : ARRAY_OP2_LOG(L_RANGE);
 signal s_reg_lzc : ARRAY_OP2_LOG(1 to L_CNT-1);
@@ -37,7 +37,7 @@ signal s_mux8_op1 : std_logic_vector(2 downto 0);
 signal s_mux2_op2 : std_logic;
 signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
     s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_shift,
-    s_enable_acc, s_enable_acc_d, s_enable_op_addr, s_enable_tp_addr,
+    s_enable_acc, s_enable_acc_d, s_enable_op_addr,
     s_enable_init, s_enable_step, s_enable_final,
     s_conciliate, s_flush, s_flush_acc, s_reset_cnt1, s_reset_cnt2,
     s_sel_read_fifo, s_enable_cnt2, s_reset_cnt1_n, s_reset_cnt2_n : std_logic;
@@ -62,13 +62,15 @@ component ram_N_op2 is
     );
 end component;
 
-component ram_NN_op2 is
+component ram_NN_S2P_op2 is
     port(
-        wea   : in  std_logic_vector(0 downto 0);
-        addra : in  std_logic_vector(NN_LOG_RANGE);
-        dina  : in  std_logic_vector(OP2_WIDTH);
-        douta : out std_logic_vector(OP2_WIDTH);
-        clka  : in  std_logic
+        clka   : in  std_logic;
+        wea    : in  std_logic_vector(0 DOWNTO 0);
+        addra  : in  std_logic_vector(NN_LOG_RANGE);
+        dina   : in  std_logic_vector(OP2_WIDTH);
+        clkb   : in  std_logic;
+        addrb  : in  std_logic_vector(NN_LOG_RANGE);
+        doutb  : out std_logic_vector(OP2_WIDTH)
     );
 end component;
 
@@ -235,12 +237,14 @@ begin
         douta => s_b
     );
 
-    ram_tp: ram_NN_op2 port map (
+    ram_tp: ram_NN_S2P_op2 port map (
         clka  => clk,
         wea   => s_tp_we,
-        addra => s_tp_addr,
+        addra => s_tp_w_addr,
         dina  => tp_in,
-        douta => s_tp
+        clkb  => clk,
+        addrb => s_tp_r_addr,
+        doutb => s_tp
     );
 
     s_enable_op_addr <= s_read_op or pi_we or b_we;
@@ -252,13 +256,18 @@ begin
         count    => s_op_addr
     );
 
-    s_enable_tp_addr <= s_read_tp or tp_we;
-
-    tp_addr: counter_NN port map (
+    tp_w_addr: counter_NN port map (
         clk      => clk,
         reset_n  => reset_n,
-        enable   => s_enable_tp_addr,
-        count    => s_tp_addr
+        enable   => tp_we,
+        count    => s_tp_w_addr
+    );
+
+    tp_r_addr: counter_NN port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        enable   => s_read_tp,
+        count    => s_tp_r_addr
     );
 
     with s_mux2_op2 select

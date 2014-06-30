@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/moiri/Documents/usi/thesis/accelerator/nexys4/ise/forward/forward_s_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/home/moiri/Documents/usi/thesis/accelerator/nexys4/ise/forward/forward_s_isim_beh1.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="forward_s" />
             <top_module name="math_real" />
@@ -18,7 +18,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="20" />
    <wvobject fp_name="/forward_s/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -254,9 +254,14 @@
       <obj_property name="ObjectShortName">s_b[17:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/forward_s/s_tp_addr" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_tp_addr[0:3]</obj_property>
-      <obj_property name="ObjectShortName">s_tp_addr[0:3]</obj_property>
+   <wvobject fp_name="/forward_s/s_tp_w_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_tp_w_addr[0:3]</obj_property>
+      <obj_property name="ObjectShortName">s_tp_w_addr[0:3]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/forward_s/s_tp_r_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_tp_r_addr[0:3]</obj_property>
+      <obj_property name="ObjectShortName">s_tp_r_addr[0:3]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/forward_s/s_tp" type="array" db_ref_id="1">
