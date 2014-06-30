@@ -25,7 +25,7 @@ end forward_s;
 architecture forward_arch of forward_s is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
-signal s_pi_addr : std_logic_vector(N_LOG_RANGE);
+signal s_pi_addr, s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_lzc : ARRAY_OP2_LOG(L_RANGE);
 signal s_reg_lzc : ARRAY_OP2_LOG(1 to L_CNT-1);
@@ -37,8 +37,8 @@ signal s_mux2_op2 : std_logic;
 signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
     s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_shift,
     s_enable_acc, s_enable_acc_d, s_enable_cnt, s_enable_init, s_enable_step, s_enable_final,
-    s_conciliate, s_flush, s_flush_acc, s_reset,
-    s_sel_read_fifo : std_logic;
+    s_conciliate, s_flush, s_flush_acc, s_reset, s_reset_cnt1, s_reset_cnt2,
+    s_sel_read_fifo, s_enable_cnt2, s_reset_cnt1_n, s_reset_cnt2_n : std_logic;
 
 component ram_N_op1 is
     port(
@@ -128,6 +128,8 @@ component forward_ctrl is
         clk             : in  std_logic;
         reset_n         : in  std_logic;
         enable          : in  std_logic;
+        ctrl_cnt1       : in  std_logic_vector(N_LOG_RANGE);
+        ctrl_cnt2       : in  std_logic_vector(N_LOG_RANGE);
         flush           : out std_logic;
         flush_acc       : out std_logic;
         sel_read_fifo   : out std_logic;
@@ -137,6 +139,9 @@ component forward_ctrl is
         shift_acc       : out std_logic;
         read_op         : out std_logic;
         read_tp         : out std_logic;
+        reset_cnt1      : out std_logic;
+        reset_cnt2      : out std_logic;
+        enable_cnt2     : out std_logic;
         enable_macc     : out std_logic;
         enable_mul      : out std_logic;
         enable_shift1   : out std_logic;
@@ -240,7 +245,7 @@ begin
 
     s_enable_cnt <= s_read_op or pi_we;
 
-    cnt: counter_N port map (
+    op_addr: counter_N port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => s_enable_cnt,
@@ -259,10 +264,30 @@ begin
         data_out        => s_op2_reg
     );
 
+    s_reset_cnt1_n <= not(s_reset_cnt1) and reset_n;
+
+    c_cnt1: counter_N port map (
+        clk      => clk,
+        reset_n  => s_reset_cnt1_n,
+        enable   => '1',
+        count    => s_ctrl_cnt1
+    );
+
+    s_reset_cnt2_n <= not(s_reset_cnt2) and reset_n;
+
+    c_cnt2: counter_N port map (
+        clk      => clk,
+        reset_n  => s_reset_cnt2_n,
+        enable   => s_enable_cnt2,
+        count    => s_ctrl_cnt2
+    );
+
     ctrl: forward_ctrl port map (
         clk             => clk,
         reset_n         => reset_n,
         enable          => data_ready,
+        ctrl_cnt1       => s_ctrl_cnt1,
+        ctrl_cnt2       => s_ctrl_cnt2,
         flush           => s_flush,
         flush_acc       => s_flush_acc,
         sel_read_fifo   => s_sel_read_fifo,
@@ -272,6 +297,9 @@ begin
         shift_acc       => s_shift_acc,
         read_op         => s_read_op,
         read_tp         => s_read_tp,
+        reset_cnt1      => s_reset_cnt1,
+        reset_cnt2      => s_reset_cnt2,
+        enable_cnt2     => s_enable_cnt2,
         enable_macc     => s_enable_macc,
         enable_mul      => s_enable_mul,
         enable_shift1   => s_enable_shift1,

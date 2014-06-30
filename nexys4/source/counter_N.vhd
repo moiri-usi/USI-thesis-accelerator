@@ -22,9 +22,10 @@ begin
             s_count <= (others => '0');
         else
             if enable = '1' and rising_edge(clk) then
-                s_count <= s_count + 1;
                 if s_count = N_CNT-1 then
                     s_count <= (others => '0');
+                else
+                    s_count <= s_count + 1;
                 end if;
             end if;
         end if;
