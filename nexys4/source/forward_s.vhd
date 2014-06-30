@@ -25,19 +25,21 @@ end forward_s;
 architecture forward_arch of forward_s is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
-signal s_pi_addr, s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
+signal s_op_addr, s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
+signal s_tp_addr : std_logic_vector(NN_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_lzc : ARRAY_OP2_LOG(L_RANGE);
 signal s_reg_lzc : ARRAY_OP2_LOG(1 to L_CNT-1);
 signal s_add_lzc : ARRAY_SCALE(L_RANGE);
 signal s_reg_add_lzc : ARRAY_SCALE(1 to L_CNT-1);
-signal s_pi_we : std_logic_vector(0 downto 0);
+signal s_pi_we, s_b_we, s_tp_we : std_logic_vector(0 downto 0);
 signal s_mux8_op1 : std_logic_vector(2 downto 0);
 signal s_mux2_op2 : std_logic;
 signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
     s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_shift,
-    s_enable_acc, s_enable_acc_d, s_enable_cnt, s_enable_init, s_enable_step, s_enable_final,
-    s_conciliate, s_flush, s_flush_acc, s_reset, s_reset_cnt1, s_reset_cnt2,
+    s_enable_acc, s_enable_acc_d, s_enable_op_addr, s_enable_tp_addr,
+    s_enable_init, s_enable_step, s_enable_final,
+    s_conciliate, s_flush, s_flush_acc, s_reset_cnt1, s_reset_cnt2,
     s_sel_read_fifo, s_enable_cnt2, s_reset_cnt1_n, s_reset_cnt2_n : std_logic;
 
 component ram_N_op1 is
@@ -50,29 +52,23 @@ component ram_N_op1 is
     );
 end component;
 
-component fifo_N_op2 is
+component ram_N_op2 is
     port(
-        clk   : in  std_logic;
-        rst   : in  std_logic;
-        wr_en : in  std_logic;
-        rd_en : in  std_logic;
-        din   : in  std_logic_vector(OP2_WIDTH);
-        dout  : out std_logic_vector(OP2_WIDTH);
-        full  : out std_logic;
-        empty : out std_logic
+        wea   : in  std_logic_vector(0 downto 0);
+        addra : in  std_logic_vector(N_LOG_RANGE);
+        dina  : in  std_logic_vector(OP2_WIDTH);
+        douta : out std_logic_vector(OP2_WIDTH);
+        clka  : in  std_logic
     );
 end component;
 
-component fifo_NN_op2 is
+component ram_NN_op2 is
     port(
-        clk   : in  std_logic;
-        rst   : in  std_logic;
-        wr_en : in  std_logic;
-        rd_en : in  std_logic;
-        din   : in  std_logic_vector(OP2_WIDTH);
-        dout  : out std_logic_vector(OP2_WIDTH);
-        full  : out std_logic;
-        empty : out std_logic
+        wea   : in  std_logic_vector(0 downto 0);
+        addra : in  std_logic_vector(NN_LOG_RANGE);
+        dina  : in  std_logic_vector(OP2_WIDTH);
+        douta : out std_logic_vector(OP2_WIDTH);
+        clka  : in  std_logic
     );
 end component;
 
@@ -82,6 +78,15 @@ component counter_N is
         reset_n  : in  std_logic;
         enable   : in  std_logic;
         count    : out std_logic_vector(N_LOG_RANGE)
+    );
+end component;
+
+component counter_NN is
+    port ( 
+        clk      : in  std_logic;
+        reset_n  : in  std_logic;
+        enable   : in  std_logic;
+        count    : out std_logic_vector(NN_LOG_RANGE)
     );
 end component;
 
@@ -201,8 +206,9 @@ component likelihood is
 end component;
 
 begin
-    s_reset <= not(reset_n);
     s_pi_we(0) <= pi_we;
+    s_b_we(0) <= b_we;
+    s_tp_we(0) <= tp_we;
     s_enable_init <= data_ready and s_enable_mul;
     s_enable_step <= data_ready and (s_enable_macc or s_enable_mul
         or s_enable_shift1 or s_enable_shift2 or s_conciliate);
@@ -216,40 +222,43 @@ begin
     ram_pi: ram_N_op1 port map (
         clka  => clk,
         wea   => s_pi_we,
-        addra => s_pi_addr,
+        addra => s_op_addr,
         dina  => pi_in,
         douta => s_pi
     );
 
-    fifo_b: fifo_N_op2 port map (
-        clk   => clk,
-        rst   => s_reset,
-        wr_en => b_we,
-        rd_en => s_read_op,
-        din   => b_in,
-        dout  => s_b,
-        full  => open,
-        empty => open
+    ram_b: ram_N_op2 port map (
+        clka  => clk,
+        wea   => s_b_we,
+        addra => s_op_addr,
+        dina  => b_in,
+        douta => s_b
     );
 
-    fifo_tp: fifo_NN_op2 port map (
-        clk   => clk,
-        rst   => s_reset,
-        wr_en => tp_we,
-        rd_en => s_read_tp,
-        din   => tp_in,
-        dout  => s_tp,
-        full  => open,
-        empty => open
+    ram_tp: ram_NN_op2 port map (
+        clka  => clk,
+        wea   => s_tp_we,
+        addra => s_tp_addr,
+        dina  => tp_in,
+        douta => s_tp
     );
 
-    s_enable_cnt <= s_read_op or pi_we;
+    s_enable_op_addr <= s_read_op or pi_we or b_we;
 
     op_addr: counter_N port map (
         clk      => clk,
         reset_n  => reset_n,
-        enable   => s_enable_cnt,
-        count    => s_pi_addr
+        enable   => s_enable_op_addr,
+        count    => s_op_addr
+    );
+
+    s_enable_tp_addr <= s_read_tp or tp_we;
+
+    tp_addr: counter_NN port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        enable   => s_enable_tp_addr,
+        count    => s_tp_addr
     );
 
     with s_mux2_op2 select

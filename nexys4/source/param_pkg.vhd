@@ -28,6 +28,9 @@ package param_pkg is
     subtype  N_RANGE is integer range 0 to N_CNT-1;
     constant N_LOG_CNT : integer := integer(ceil(log2(real(N_CNT))));
     subtype  N_LOG_RANGE is integer range 0 to N_LOG_CNT-1;
+    constant NN_CNT : integer := N_CNT**2;
+    constant NN_LOG_CNT : integer := N_LOG_CNT + N_LOG_CNT;
+    subtype  NN_LOG_RANGE is integer range 0 to NN_LOG_CNT-1;
     constant L_CNT : integer := 10;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     constant L_LOG_CNT : integer := integer(ceil(log2(real(L_CNT))));
