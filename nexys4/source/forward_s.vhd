@@ -25,7 +25,8 @@ end forward_s;
 architecture forward_arch of forward_s is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
-signal s_op_addr, s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
+signal s_op_r_addr, s_b_w_addr, s_pi_w_addr, s_ctrl_cnt1,
+    s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
 signal s_tp_w_addr, s_tp_r_addr : std_logic_vector(NN_LOG_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_lzc : ARRAY_OP2_LOG(L_RANGE);
@@ -42,23 +43,27 @@ signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
     s_conciliate, s_flush, s_flush_acc, s_reset_cnt1, s_reset_cnt2,
     s_sel_read_fifo, s_enable_cnt2, s_reset_cnt1_n, s_reset_cnt2_n : std_logic;
 
-component ram_N_op1 is
+component ram_N_S2P_op1 is
     port(
-        wea   : in  std_logic_vector(0 downto 0);
-        addra : in  std_logic_vector(N_LOG_RANGE);
-        dina  : in  std_logic_vector(OP1_WIDTH);
-        douta : out std_logic_vector(OP1_WIDTH);
-        clka  : in  std_logic
+        clka   : in  std_logic;
+        wea    : in  std_logic_vector(0 DOWNTO 0);
+        addra  : in  std_logic_vector(N_LOG_RANGE);
+        dina   : in  std_logic_vector(OP1_WIDTH);
+        clkb   : in  std_logic;
+        addrb  : in  std_logic_vector(N_LOG_RANGE);
+        doutb  : out std_logic_vector(OP1_WIDTH)
     );
 end component;
 
-component ram_N_op2 is
+component ram_N_S2P_op2 is
     port(
-        wea   : in  std_logic_vector(0 downto 0);
-        addra : in  std_logic_vector(N_LOG_RANGE);
-        dina  : in  std_logic_vector(OP2_WIDTH);
-        douta : out std_logic_vector(OP2_WIDTH);
-        clka  : in  std_logic
+        clka   : in  std_logic;
+        wea    : in  std_logic_vector(0 DOWNTO 0);
+        addra  : in  std_logic_vector(N_LOG_RANGE);
+        dina   : in  std_logic_vector(OP2_WIDTH);
+        clkb   : in  std_logic;
+        addrb  : in  std_logic_vector(N_LOG_RANGE);
+        doutb  : out std_logic_vector(OP2_WIDTH)
     );
 end component;
 
@@ -221,39 +226,45 @@ begin
                   & (s_enable_shift2 or s_conciliate);
     s_mux2_op2 <= s_enable_mul;
 
-    ram_pi: ram_N_op1 port map (
-        clka  => clk,
-        wea   => s_pi_we,
-        addra => s_op_addr,
-        dina  => pi_in,
-        douta => s_pi
-    );
-
-    ram_b: ram_N_op2 port map (
-        clka  => clk,
-        wea   => s_b_we,
-        addra => s_op_addr,
-        dina  => b_in,
-        douta => s_b
-    );
-
-    ram_tp: ram_NN_S2P_op2 port map (
-        clka  => clk,
-        wea   => s_tp_we,
-        addra => s_tp_w_addr,
-        dina  => tp_in,
-        clkb  => clk,
-        addrb => s_tp_r_addr,
-        doutb => s_tp
-    );
-
-    s_enable_op_addr <= s_read_op or pi_we or b_we;
-
-    op_addr: counter_N port map (
+    pi_w_addr: counter_N port map (
         clk      => clk,
         reset_n  => reset_n,
-        enable   => s_enable_op_addr,
-        count    => s_op_addr
+        enable   => pi_we,
+        count    => s_pi_w_addr
+    );
+
+    op_r_addr: counter_N port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        enable   => s_read_op,
+        count    => s_op_r_addr
+    );
+
+    ram_pi: ram_N_S2P_op1 port map (
+        clka  => clk,
+        wea   => s_pi_we,
+        addra => s_pi_w_addr,
+        dina  => pi_in,
+        clkb  => clk,
+        addrb => s_op_r_addr,
+        doutb => s_pi
+    );
+
+    b_w_addr: counter_N port map (
+        clk      => clk,
+        reset_n  => reset_n,
+        enable   => b_we,
+        count    => s_b_w_addr
+    );
+
+    ram_b: ram_N_S2P_op2 port map (
+        clka  => clk,
+        wea   => s_b_we,
+        addra => s_b_w_addr,
+        dina  => b_in,
+        clkb  => clk,
+        addrb => s_op_r_addr,
+        doutb => s_b
     );
 
     tp_w_addr: counter_NN port map (
@@ -268,6 +279,16 @@ begin
         reset_n  => reset_n,
         enable   => s_read_tp,
         count    => s_tp_r_addr
+    );
+
+    ram_tp: ram_NN_S2P_op2 port map (
+        clka  => clk,
+        wea   => s_tp_we,
+        addra => s_tp_w_addr,
+        dina  => tp_in,
+        clkb  => clk,
+        addrb => s_tp_r_addr,
+        doutb => s_tp
     );
 
     with s_mux2_op2 select

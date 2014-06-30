@@ -69,15 +69,17 @@ begin
         when st_select =>
             next_state <= st_macc;
             enable_acc  <= '1';
+            read_tp     <= '1';
             switch_fifo <= TRUE;
 
         when st_macc =>
             next_state <= st_macc;
             if ctrl_cnt1 = N_CNT-1 then
                 next_state <= st_conciliate_macc1;
+            elsif ctrl_cnt1 < N_CNT-1 then
+                read_tp        <= '1';
             end if;
             shift_alpha_in <= '1';
-            read_tp        <= '1';
             enable_macc    <= '1';
 
         when st_conciliate_macc1 =>
@@ -128,6 +130,8 @@ begin
             if ctrl_cnt2 = N_CNT-1 then
                 next_state <= st_select;
                 s_reset_cnt1    <= '1';
+            else
+                read_tp <= '1';
             end if;
             flush <= '1';
 

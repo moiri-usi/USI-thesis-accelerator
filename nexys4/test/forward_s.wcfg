@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/moiri/Documents/usi/thesis/accelerator/nexys4/ise/forward/forward_s_isim_beh1.wdb" id="1" type="auto">
+      <db_ref path="/home/moiri/Documents/usi/thesis/accelerator/nexys4/ise/forward/forward_s_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="forward_s" />
             <top_module name="math_real" />
@@ -18,7 +18,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="22" />
    <wvobject fp_name="/forward_s/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -239,14 +239,24 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#008080</obj_property>
    </wvobject>
-   <wvobject fp_name="/forward_s/s_op_addr" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">s_op_addr[0:1]</obj_property>
-      <obj_property name="ObjectShortName">s_op_addr[0:1]</obj_property>
+   <wvobject fp_name="/forward_s/s_op_r_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_op_r_addr[0:1]</obj_property>
+      <obj_property name="ObjectShortName">s_op_r_addr[0:1]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/forward_s/s_pi_w_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_pi_w_addr[0:1]</obj_property>
+      <obj_property name="ObjectShortName">s_pi_w_addr[0:1]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/forward_s/s_pi" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">s_pi[24:0]</obj_property>
       <obj_property name="ObjectShortName">s_pi[24:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/forward_s/s_b_w_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_b_w_addr[0:1]</obj_property>
+      <obj_property name="ObjectShortName">s_b_w_addr[0:1]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/forward_s/s_b" type="array" db_ref_id="1">
