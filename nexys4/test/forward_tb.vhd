@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity forward_s_tb is
+entity forward_tb is
     port(
         clk          : in  std_logic;
         reset_n      : in  std_logic;
@@ -13,9 +13,9 @@ entity forward_s_tb is
         an_o         : out std_logic_vector(7 downto 0);
         ps_scale     : out std_logic_vector(SCALE_WIDTH)
     );
-end forward_s_tb;
+end forward_tb;
 
-architecture tb of forward_s_tb is
+architecture tb of forward_tb is
 signal s_dispVal : std_logic_vector(63 downto 0);
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 signal s_ps : std_logic_vector(OP1_WIDTH);
@@ -42,7 +42,7 @@ constant SEG_DEF : ARRAY_SEG(0 to 15) := (
     "10001110"
 );
 
-component forward_s is
+component forward is
     port(
         clk          : in  std_logic;
         reset_n      : in  std_logic;
@@ -70,7 +70,7 @@ end component;
 begin
     ps_scale <= s_ps_scale;
 
-    forward: forward_s port map(
+    seq1: forward port map(
         clk          => clk,
         reset_n      => reset_n,
         b_in         => (others => '0'),
