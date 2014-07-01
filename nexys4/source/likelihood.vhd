@@ -22,7 +22,7 @@ signal s_ps1, s_ps2 : std_logic_vector(OP1_WIDTH);
 signal s_reset, s_reset_delay, s_enable_delay : std_logic;
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 
-component acc_s is
+component acc is
     port (
         clk     : in  std_logic;
         reset_n : in  std_logic;
@@ -55,7 +55,7 @@ end component;
 begin
     s_reset <= reset_n and s_reset_delay;
 
-    acc: acc_s port map (
+    acc_u: acc port map (
         clk     => clk,
         reset_n => s_reset,
         enable  => load,

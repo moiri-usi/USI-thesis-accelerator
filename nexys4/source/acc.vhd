@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity acc_s is
+entity acc is
     port(
         clk     : in  std_logic;
         reset_n : in  std_logic;
@@ -11,9 +11,9 @@ entity acc_s is
         alpha   : in  std_logic_vector (OP1_WIDTH);
         ps      : out std_logic_vector (OP1_WIDTH)
     );
-end acc_s;
+end acc;
 
-architecture acc of acc_s is
+architecture arch of acc is
     signal s_reg_op : std_logic_vector (OP1_WIDTH);
 begin
     ps <= s_reg_op;
@@ -27,4 +27,4 @@ begin
             end if;
         end if;
     end process;
-end acc;
+end arch;

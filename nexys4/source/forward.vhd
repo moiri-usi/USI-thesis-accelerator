@@ -7,7 +7,7 @@ use work.param_pkg.all;
 library unisim;
 use unisim.vcomponents.all;
 
-entity forward_s is
+entity forward is
     port(
         clk          : in  std_logic;
         reset_n      : in  std_logic;
@@ -21,9 +21,9 @@ entity forward_s is
         ps_scale_out : out std_logic_vector(SCALE_WIDTH);
         ps_out       : out std_logic_vector(OP1_WIDTH)
     );
-end forward_s;
+end forward;
 
-architecture forward_arch of forward_s is
+architecture forward_arch of forward is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
 signal s_op_r_addr, s_b_w_addr, s_pi_w_addr,
@@ -175,7 +175,7 @@ component forward_ctrl is
     );
 end component;
 
-component forward_init_s is
+component forward_init is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
@@ -190,7 +190,7 @@ component forward_init_s is
     );
 end component;
 
-component forward_step_s is
+component forward_step is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
@@ -372,7 +372,7 @@ begin
 
     u1: for k in L_RANGE generate
         if0: if k = 0 generate
-            init: forward_init_s port map (
+            init: forward_init port map (
                 clk             => clk,
                 reset_n         => reset_n,
                 enable          => s_enable_init,
@@ -386,7 +386,7 @@ begin
             );
         end generate if0;
         ifk: if k > 0 generate
-            stepk: forward_step_s port map (
+            stepk: forward_step port map (
                 clk             => clk,
                 reset_n         => reset_n,
                 sel_read_fifo   => s_sel_read_fifo,

@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity forward_init_s is
+entity forward_init is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
@@ -17,13 +17,13 @@ entity forward_init_s is
         lzc_out         : out std_logic_vector(OP2_LOG_WIDTH);
         alpha_out       : out std_logic_vector(OP1_WIDTH)
     );
-end forward_init_s;
+end forward_init;
 
-architecture forward_init_arch of forward_init_s is
+architecture forward_init_arch of forward_init is
 signal s_mul : std_logic_vector(MUL_WIDTH);
 signal s_reset : std_logic;
 
-component mul_s is
+component mul is
     port(
         clk     : in  std_logic;
         reset_n : in  std_logic;
@@ -48,7 +48,7 @@ end component;
 begin
     s_reset <= reset_n and not(flush);
 
-    mul: mul_s port map (
+    mul_u: mul port map (
         clk     => clk,
         reset_n => s_reset,
         enable  => enable,

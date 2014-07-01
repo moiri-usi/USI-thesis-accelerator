@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity mul_s is
+entity mul is
     port(
         clk     : in  std_logic;
         reset_n : in  std_logic;
@@ -12,9 +12,9 @@ entity mul_s is
         op2     : in  std_logic_vector (OP2_WIDTH);
         mul     : out std_logic_vector (MUL_WIDTH)
     );
-end mul_s;
+end mul;
 
-architecture mul of mul_s is
+architecture arch of mul is
     signal s_reg_op1 : std_logic_vector (OP1_WIDTH);
     signal s_reg_op2 : std_logic_vector (OP2_WIDTH);
     signal s_reg_mul : std_logic_vector (MUL_WIDTH);
@@ -34,4 +34,4 @@ begin
             end if;
         end if;
     end process;
-end mul;
+end arch;

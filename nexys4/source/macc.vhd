@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity macc_s is
+entity macc is
     port(
         clk       : in  std_logic;
         reset_n   : in  std_logic;
@@ -15,9 +15,9 @@ entity macc_s is
         mul       : out std_logic_vector(MUL_WIDTH);
         macc      : out std_logic_vector(MACC_WIDTH)
     );
-end macc_s;
+end macc;
 
-architecture macc of macc_s is
+architecture arch of macc is
     signal s_reg_op1 : std_logic_vector(OP1_WIDTH);
     signal s_reg_mul : std_logic_vector(MUL_WIDTH);
     signal s_reg_acc : std_logic_vector(MACC_WIDTH);
@@ -47,4 +47,4 @@ begin
             end if;
         end if;
     end process;
-end macc;
+end arch;

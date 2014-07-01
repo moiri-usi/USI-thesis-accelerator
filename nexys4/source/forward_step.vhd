@@ -7,7 +7,7 @@ use work.param_pkg.all;
 library unisim;
 use unisim.vcomponents.all;
 
-entity forward_step_s is
+entity forward_step is
     port (
         clk             : in  std_logic;
         reset_n         : in  std_logic;
@@ -27,9 +27,9 @@ entity forward_step_s is
         lzc_out         : out std_logic_vector(OP2_LOG_WIDTH);
         alpha_out       : out std_logic_vector(OP1_WIDTH)
     );
-end forward_step_s;
+end forward_step;
 
-architecture forward_step_arch of forward_step_s is
+architecture forward_step_arch of forward_step is
 signal s_feed_back : std_logic_vector(MACC_WIDTH);
 signal s_mul : std_logic_vector(MUL_WIDTH);
 signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in,
@@ -39,7 +39,7 @@ signal s_mux4_op1 : std_logic_vector(1 downto 0);
 signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
     s_reset_macc, s_fifo0_rst, s_fifo1_rst : std_logic;
 
-component macc_s is
+component macc is
     port(
         clk       : in  std_logic;
         reset_n   : in  std_logic;
@@ -108,7 +108,7 @@ begin
 
     s_reset_macc <= reset_n and not(flush_macc);
 
-    macc: macc_s port map (
+    macc_u: macc port map (
         clk       => clk,
         reset_n   => s_reset_macc,
         shift_acc => shift_acc,
