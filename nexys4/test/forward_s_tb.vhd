@@ -8,10 +8,6 @@ entity forward_s_tb is
     port(
         clk          : in  std_logic;
         reset_n      : in  std_logic;
-        mode         : in  std_logic;
-        step         : in  std_logic;
-        reset_led    : out std_logic;
-        mode_led     : out std_logic;
         --ps           : out std_logic_vector(OP1_WIDTH);
         seg_o        : out std_logic_vector(7 downto 0);
         an_o         : out std_logic_vector(7 downto 0);
@@ -23,6 +19,7 @@ architecture tb of forward_s_tb is
 signal s_dispVal : std_logic_vector(63 downto 0);
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 signal s_ps : std_logic_vector(OP1_WIDTH);
+signal reset : std_logic;
 type ARRAY_VAL is array (natural range <>) of std_logic_vector(3 downto 0);
 signal s_seg : ARRAY_VAL(0 to 7);
 type ARRAY_SEG is array (natural range <>) of std_logic_vector(7 downto 0);
@@ -71,8 +68,6 @@ component sSegDisplay is
 end component;
 
 begin
-    reset_led <= not(reset_n);
-    mode_led <= mode;
     ps_scale <= s_ps_scale;
 
     forward: forward_s port map(
@@ -84,19 +79,11 @@ begin
         tp_we        => '0',
         pi_in        => (others => '0'),
         pi_we        => '0',
-        data_ready   => step,
+        data_ready   => '1',
         ps_scale_out => s_ps_scale,
         ps_out       => s_ps
     );
 
-    --s_dispVal <= SEG_DEF(0)
-    --    & SEG_DEF(to_integer(unsigned("000" & s_ps(OP1_CNT-1 downto OP1_CNT-4))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-5 downto OP1_CNT-8))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-9 downto OP1_CNT-12))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-13 downto OP1_CNT-16))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-17 downto OP1_CNT-20))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-21 downto OP1_CNT-24))))
-    --    & SEG_DEF(to_integer(unsigned(s_ps(OP1_CNT-25 downto OP1_CNT-28))));
     s_seg(0) <= "0000";
     s_seg(1) <= "000" & s_ps(OP1_CNT-1);
     s_seg(2) <= s_ps(OP1_CNT-2 downto OP1_CNT-5);
@@ -114,6 +101,7 @@ begin
         & SEG_DEF(to_integer(unsigned(s_seg(5))))
         & SEG_DEF(to_integer(unsigned(s_seg(6))))
         & SEG_DEF(to_integer(unsigned(s_seg(7))));
+
     Disp: sSegDisplay port map(
         ck       => clk,
         number   => s_dispVal, -- 64-bit
