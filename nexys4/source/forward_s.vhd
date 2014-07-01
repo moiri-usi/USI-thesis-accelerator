@@ -1,4 +1,5 @@
 library ieee;
+use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
@@ -25,9 +26,10 @@ end forward_s;
 architecture forward_arch of forward_s is
 signal s_b, s_tp, s_op2, s_op2_reg : std_logic_vector(OP2_WIDTH);
 signal s_pi : std_logic_vector(OP1_WIDTH);
-signal s_op_r_addr, s_b_w_addr, s_pi_w_addr, s_ctrl_cnt1,
-    s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
-signal s_tp_w_addr, s_tp_r_addr : std_logic_vector(NN_LOG_RANGE);
+signal s_op_r_addr, s_b_w_addr, s_pi_w_addr,
+    s_max_n_val : std_logic_vector(N_LOG_RAM_RANGE);
+signal s_ctrl_cnt1, s_ctrl_cnt2 : std_logic_vector(N_LOG_RANGE);
+signal s_tp_w_addr, s_tp_r_addr, s_max_nn_val : std_logic_vector(NN_LOG_RAM_RANGE);
 signal s_alpha : ARRAY_OP1(L_RANGE);
 signal s_lzc : ARRAY_OP2_LOG(L_RANGE);
 signal s_reg_lzc : ARRAY_OP2_LOG(1 to L_CNT-1);
@@ -47,10 +49,10 @@ component ram_N_S2P_op1 is
     port(
         clka   : in  std_logic;
         wea    : in  std_logic_vector(0 DOWNTO 0);
-        addra  : in  std_logic_vector(N_LOG_RANGE);
+        addra  : in  std_logic_vector(N_LOG_RAM_RANGE);
         dina   : in  std_logic_vector(OP1_WIDTH);
         clkb   : in  std_logic;
-        addrb  : in  std_logic_vector(N_LOG_RANGE);
+        addrb  : in  std_logic_vector(N_LOG_RAM_RANGE);
         doutb  : out std_logic_vector(OP1_WIDTH)
     );
 end component;
@@ -59,10 +61,10 @@ component ram_N_S2P_op2 is
     port(
         clka   : in  std_logic;
         wea    : in  std_logic_vector(0 DOWNTO 0);
-        addra  : in  std_logic_vector(N_LOG_RANGE);
+        addra  : in  std_logic_vector(N_LOG_RAM_RANGE);
         dina   : in  std_logic_vector(OP2_WIDTH);
         clkb   : in  std_logic;
-        addrb  : in  std_logic_vector(N_LOG_RANGE);
+        addrb  : in  std_logic_vector(N_LOG_RAM_RANGE);
         doutb  : out std_logic_vector(OP2_WIDTH)
     );
 end component;
@@ -71,10 +73,10 @@ component ram_NN_S2P_op2 is
     port(
         clka   : in  std_logic;
         wea    : in  std_logic_vector(0 DOWNTO 0);
-        addra  : in  std_logic_vector(NN_LOG_RANGE);
+        addra  : in  std_logic_vector(NN_LOG_RAM_RANGE);
         dina   : in  std_logic_vector(OP2_WIDTH);
         clkb   : in  std_logic;
-        addrb  : in  std_logic_vector(NN_LOG_RANGE);
+        addrb  : in  std_logic_vector(NN_LOG_RAM_RANGE);
         doutb  : out std_logic_vector(OP2_WIDTH)
     );
 end component;
@@ -88,12 +90,23 @@ component counter_N is
     );
 end component;
 
-component counter_NN is
+component counter_N_ram is
     port ( 
         clk      : in  std_logic;
         reset_n  : in  std_logic;
         enable   : in  std_logic;
-        count    : out std_logic_vector(NN_LOG_RANGE)
+        max_val  : in  std_logic_vector(N_LOG_RAM_RANGE);
+        count    : out std_logic_vector(N_LOG_RAM_RANGE)
+    );
+end component;
+
+component counter_NN_ram is
+    port ( 
+        clk      : in  std_logic;
+        reset_n  : in  std_logic;
+        enable   : in  std_logic;
+        max_val  : in  std_logic_vector(NN_LOG_RAM_RANGE);
+        count    : out std_logic_vector(NN_LOG_RAM_RANGE)
     );
 end component;
 
@@ -226,17 +239,21 @@ begin
                   & (s_enable_shift2 or s_conciliate);
     s_mux2_op2 <= s_enable_mul;
 
-    pi_w_addr: counter_N port map (
+    s_max_n_val <= std_logic_vector(to_unsigned(N_CNT, N_LOG_RAM_CNT));
+
+    pi_w_addr: counter_N_ram port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => pi_we,
+        max_val  => s_max_n_val,
         count    => s_pi_w_addr
     );
 
-    op_r_addr: counter_N port map (
+    op_r_addr: counter_N_ram port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => s_read_op,
+        max_val  => s_max_n_val,
         count    => s_op_r_addr
     );
 
@@ -250,10 +267,11 @@ begin
         doutb => s_pi
     );
 
-    b_w_addr: counter_N port map (
+    b_w_addr: counter_N_ram port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => b_we,
+        max_val  => s_max_n_val,
         count    => s_b_w_addr
     );
 
@@ -267,17 +285,21 @@ begin
         doutb => s_b
     );
 
-    tp_w_addr: counter_NN port map (
+    s_max_nn_val <= std_logic_vector(to_unsigned(NN_CNT, NN_LOG_RAM_CNT));
+
+    tp_w_addr: counter_NN_ram port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => tp_we,
+        max_val  => s_max_nn_val,
         count    => s_tp_w_addr
     );
 
-    tp_r_addr: counter_NN port map (
+    tp_r_addr: counter_NN_ram port map (
         clk      => clk,
         reset_n  => reset_n,
         enable   => s_read_tp,
+        max_val  => s_max_nn_val,
         count    => s_tp_r_addr
     );
 

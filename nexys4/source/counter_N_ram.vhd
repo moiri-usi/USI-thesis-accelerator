@@ -3,27 +3,28 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
-entity counter_NN is
+entity counter_N_ram is
     port ( 
         clk      : in  std_logic;
         reset_n  : in  std_logic;
         enable   : in  std_logic;
-        count    : out std_logic_vector(NN_LOG_RANGE)
+        max_val  : in  std_logic_vector(N_LOG_RAM_RANGE);
+        count    : out std_logic_vector(N_LOG_RAM_RANGE)
     );
-end counter_NN;
+end counter_N_ram;
 
-architecture counter of counter_NN is
-signal s_count : std_logic_vector(NN_LOG_RANGE);
+architecture counter of counter_N_ram is
+signal s_count : std_logic_vector(N_LOG_RAM_RANGE);
 begin
     count <= s_count;
     process(clk, reset_n, enable)
     begin
         if reset_n = '0' then
-            s_count <= (others => '0');
+            s_count <= (N_LOG_RAM_CNT-1 downto 1 => '0') & '1';
         else
             if enable = '1' and rising_edge(clk) then
-                if s_count = NN_CNT-1 then
-                    s_count <= (others => '0');
+                if s_count = max_val then
+                    s_count <= (N_LOG_RAM_CNT-1 downto 1 => '0') & '1';
                 else
                     s_count <= s_count + 1;
                 end if;

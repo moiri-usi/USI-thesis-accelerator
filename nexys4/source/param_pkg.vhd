@@ -24,13 +24,20 @@ package param_pkg is
     subtype  MACC_LEAST_WIDTH is integer range OP1_CNT-1 downto 0;
     subtype  MACC_LOW_WIDTH is integer range OP2_CNT-1 downto 0;
     -- Constants
+    constant N_RAM_CNT : integer := 128;
+    subtype  N_RAM_RANGE is integer range 0 to N_RAM_CNT-1;
+    constant N_LOG_RAM_CNT : integer := integer(ceil(log2(real(N_RAM_CNT))));
+    subtype  N_LOG_RAM_RANGE is integer range 0 to N_LOG_RAM_CNT-1;
     constant N_CNT : integer := 3;
     subtype  N_RANGE is integer range 0 to N_CNT-1;
     constant N_LOG_CNT : integer := integer(ceil(log2(real(N_CNT))));
     subtype  N_LOG_RANGE is integer range 0 to N_LOG_CNT-1;
     constant NN_CNT : integer := N_CNT**2;
+    constant NN_RAM_CNT : integer := N_RAM_CNT**2;
     constant NN_LOG_CNT : integer := N_LOG_CNT + N_LOG_CNT;
+    constant NN_LOG_RAM_CNT : integer := N_LOG_RAM_CNT + N_LOG_RAM_CNT;
     subtype  NN_LOG_RANGE is integer range 0 to NN_LOG_CNT-1;
+    subtype  NN_LOG_RAM_RANGE is integer range 0 to NN_LOG_RAM_CNT-1;
     constant L_CNT : integer := 10;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     constant L_LOG_CNT : integer := integer(ceil(log2(real(L_CNT))));
