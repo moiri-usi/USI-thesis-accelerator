@@ -10,6 +10,8 @@ package param_pkg is
     constant OP1_LOG_CNT : integer := integer(ceil(log2(real(OP1_CNT))));
     subtype  OP1_LOG_WIDTH is integer range OP1_LOG_CNT-1 downto 0;
     constant OP2_CNT : integer := 18;
+    constant OP2_CNT_12 : integer := 9;
+    constant OP2_CNT_22 : integer := 9;
     subtype  OP2_WIDTH is integer range OP2_CNT-1 downto 0;
     constant OP2_LOG_CNT : integer := integer(ceil(log2(real(OP2_CNT))));
     subtype  OP2_LOG_WIDTH is integer range OP2_LOG_CNT-1 downto 0;

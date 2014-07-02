@@ -19,7 +19,7 @@ end likelihood;
 
 architecture likelihood_arch of likelihood is
 signal s_ps1, s_ps2 : std_logic_vector(OP1_WIDTH);
-signal s_reset, s_reset_delay, s_enable_delay : std_logic;
+signal s_reset, s_reset_delay, s_enable_delay, s_enable_dd : std_logic;
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 
 component acc is
@@ -74,7 +74,7 @@ begin
     reg01: reg_op1 port map (
         clk      => clk,
         reset_n  => reset_n,
-        load     => s_enable_delay,
+        load     => s_enable_dd,
         data_in  => s_ps2,
         data_out => ps_out
     );
@@ -84,7 +84,7 @@ begin
     reg1: reg_scale port map (
         clk      => clk,
         reset_n  => reset_n,
-        load     => s_enable_delay,
+        load     => s_enable_dd,
         data_in  => s_ps_scale,
         data_out => ps_scale_out
     );
@@ -94,6 +94,7 @@ begin
         if rising_edge(clk) then
             s_reset_delay <= not(enable);
             s_enable_delay <= enable;
+            s_enable_dd <= s_enable_delay;
         end if;
     end process;
 

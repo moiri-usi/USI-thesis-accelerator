@@ -40,7 +40,7 @@ signal s_mux8_op1 : std_logic_vector(2 downto 0);
 signal s_mux2_op2 : std_logic;
 signal s_shift_alpha_in, s_shift_alpha_out, s_shift_acc, s_read_op, s_read_tp,
     s_enable_macc, s_enable_mul, s_enable_shift1, s_enable_shift2, s_enable_shift,
-    s_enable_acc, s_enable_acc_d, s_enable_op_addr,
+    s_enable_acc, s_enable_acc_d, s_enable_acc_dd, s_enable_op_addr,
     s_enable_init, s_enable_step, s_enable_final,
     s_conciliate, s_flush, s_flush_acc, s_reset_cnt1, s_reset_cnt2,
     s_sel_read_fifo, s_enable_cnt2, s_reset_cnt1_n, s_reset_cnt2_n : std_logic;
@@ -408,14 +408,14 @@ begin
             reg_lzc_k: reg_op2_log port map (
                 clk      => clk,
                 reset_n  => reset_n,
-                load     => s_enable_acc_d,
+                load     => s_enable_acc_dd,
                 data_in  => s_lzc(k),
                 data_out => s_reg_lzc(k)
             );
             reg_scale_k: reg_scale port map (
                 clk      => clk,
                 reset_n  => reset_n,
-                load     => s_enable_acc,
+                load     => s_enable_acc_d,
                 data_in  => s_add_lzc(k-1),
                 data_out => s_reg_add_lzc(k)
             );
@@ -432,6 +432,7 @@ begin
     begin
         if(clk = '1' and clk'event) then
             s_enable_acc_d <= s_enable_acc;
+            s_enable_acc_dd <= s_enable_acc_d;
         end if;
     end process;
 
