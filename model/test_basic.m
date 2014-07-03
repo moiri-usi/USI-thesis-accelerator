@@ -5,8 +5,8 @@ OP2_WIDTH = 18;
 N = 100; % number of states
 M = 1; % number of observation symbols
 %L = 10; % sequence lengt
-seq_e = randint(1, L, [1 M]); % example sequence
-alphabet = [1:M]; % alphabet (list of observation symbols)
+%seq_e = randint(1, L, [1 M]); % example sequence
+%alphabet = [1:M]; % alphabet (list of observation symbols)
 % PI: initial state probability vector. size N
 %PI = abs(rand(N, 1))/N;
 %PI(1) = 0.18781;
@@ -44,6 +44,7 @@ alphabet = [1:M]; % alphabet (list of observation symbols)
 %        TP_dec(i, j) = float2myDec(TP(i, j), OP2_WIDTH);
 %    end
 %end
+load("../nexys4/test/seq_e.mat");
 load("../nexys4/test/b.mat");
 load("../nexys4/test/pi.mat");
 load("../nexys4/test/tp.mat");
@@ -53,7 +54,7 @@ alpha = zeros(N, L);
 % ==============================================================================
 tic;
 %for i=1:10,
-    Ps = forward_s_basic(N, L, PI, B, TP, seq_e)
+    Ps = forward_s_basic(N, L, PI, B, TP, repmat(seq_e(1), 1, L))
 %end
 toc;
 %

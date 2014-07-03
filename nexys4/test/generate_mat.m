@@ -6,9 +6,9 @@ OP1_WIDTH = 25;
 OP2_WIDTH = 18;
 N = 100; % number of states
 M = 1000; % number of observation symbols
-L = 200; % sequence lengt
+L = 100; % sequence length
 seq_e = randint(1, L, [1 M]); % example sequence
-alphabet = [1:M]; % alphabet (list of observation symbols)
+save seq_e.mat seq_e;
 % PI: initial state probability vector. size N
 PI = abs(rand(N, 1));
 PI = PI./sum(PI);

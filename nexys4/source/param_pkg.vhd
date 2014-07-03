@@ -40,7 +40,7 @@ package param_pkg is
     constant NN_LOG_RAM_CNT : integer := N_LOG_RAM_CNT + N_LOG_RAM_CNT;
     subtype  NN_LOG_RANGE is integer range 0 to NN_LOG_CNT-1;
     subtype  NN_LOG_RAM_RANGE is integer range 0 to NN_LOG_RAM_CNT-1;
-    constant L_CNT : integer := 10;
+    constant L_CNT : integer := 100;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     constant L_LOG_CNT : integer := integer(ceil(log2(real(L_CNT))));
     subtype  L_LOG_RANGE is integer range 0 to L_LOG_CNT-1;
