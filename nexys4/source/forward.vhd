@@ -441,7 +441,7 @@ begin
         reset_n         => reset_n,
         load            => s_shift_alpha_out,
         enable          => s_enable_final,
-        ps_scale_in     => s_add_lzc(L_CNT-1),
+        ps_scale_in     => s_reg_add_lzc(L_CNT-1),
         alpha_in        => s_alpha(L_CNT-1),
         ps_scale_out    => ps_scale_out,
         ps_out          => ps_out

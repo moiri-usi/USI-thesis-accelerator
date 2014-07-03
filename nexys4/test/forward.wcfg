@@ -296,6 +296,11 @@
          <obj_property name="UseCustomSignalColor">true</obj_property>
          <obj_property name="CustomSignalColor">#008080</obj_property>
       </wvobject>
+      <wvobject fp_name="/forward/\u1(0)\/if0/init/alpha_out" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">alpha_out[24:0]</obj_property>
+         <obj_property name="ObjectShortName">alpha_out[24:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
       <wvobject fp_name="group143" type="group">
          <obj_property name="label">lzc</obj_property>
          <obj_property name="DisplayName">label</obj_property>

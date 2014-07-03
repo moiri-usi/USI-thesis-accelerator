@@ -37,7 +37,7 @@ signal s_fifo_out, s_fifo0_out, s_fifo1_out, s_fifo0_in, s_fifo1_in,
 signal s_op2, s_lzc_fact : std_logic_vector(OP2_WIDTH);
 signal s_mux4_op1 : std_logic_vector(1 downto 0);
 signal sel_read_fifo_n, s_fifo0_we, s_fifo1_we, s_fifo0_re, s_fifo1_re,
-    s_reset_macc, s_fifo0_rst, s_fifo1_rst : std_logic;
+    s_reset_macc, s_fifo0_rst, s_fifo1_rst, s_load_lzc : std_logic;
 
 component macc is
     port(
@@ -120,10 +120,19 @@ begin
         macc      => s_feed_back
     );
 
+    en_lzc: process(s_mul)
+    begin
+        if s_mul = (MUL_WIDTH => '0') then
+            s_load_lzc <= '0';
+        else
+            s_load_lzc <= shift_alpha_out;
+        end if;
+    end process;
+
     lzc: lzc_op2 port map (
         clk      => clk,
         reset_n  => reset_n,
-        load     => shift_alpha_out,
+        load     => s_load_lzc,
         load_out => flush_fifo,
         data_in  => s_mul(MUL_LZC_WIDTH),
         data_out => lzc_out

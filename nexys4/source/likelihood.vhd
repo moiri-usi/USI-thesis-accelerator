@@ -79,8 +79,8 @@ begin
         data_out => ps_out
     );
 
-    s_ps_scale <= ps_scale_in
-        - std_logic_vector(to_unsigned(OP2_CNT, SCALE_CNT));
+    s_ps_scale <= ps_scale_in;
+    --    - std_logic_vector(to_unsigned(OP2_CNT, SCALE_CNT));
     reg1: reg_scale port map (
         clk      => clk,
         reset_n  => reset_n,

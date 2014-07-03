@@ -11,25 +11,3 @@ run 30ns
 run 10ns
 isim force add data_ready 1
 run 10ns
-run 10ns
-run 10ns
-run 10ns
-run 10ns
-run 10ns
-run 10ns
-run 10ns
-run 280ns
-
-for {set i 0} {$i < 10} {incr i} {
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 10ns
-    run 280ns
-}
-run 100ns

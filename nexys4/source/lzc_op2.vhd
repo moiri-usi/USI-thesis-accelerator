@@ -105,7 +105,8 @@ begin
 
     s_load_reg1 <= s_sel_lzc or s_load_out_dd;
     --s_load_reg1 <= s_sel_lzc or s_load_out_d;
-    s_init_reg1 <= std_logic_vector(to_unsigned(OP2_CNT, OP2_LOG_CNT));
+    --s_init_reg1 <= std_logic_vector(to_unsigned(OP2_CNT, OP2_LOG_CNT));
+    s_init_reg1 <= (others => '0');
     with s_load_out_dd select
     --with s_load_out_d select
         s_lzc_reg1 <= s_lzc_new   when '0',
@@ -131,8 +132,10 @@ begin
 
     sel_lzc: process(s_lzc_new, s_lzc_last)
     begin
-        if (s_lzc_new < s_lzc_last) or ((s_lzc_new > (OP2_LOG_WIDTH => '0'))
+        if (s_lzc_new < s_lzc_last)
+            or ((s_lzc_new > (OP2_LOG_WIDTH => '0'))
             and s_lzc_last = (OP2_LOG_WIDTH => '0')) then
+                --and (s_lzc_new < OP2_CNT)) then
             s_sel_lzc <= '1';
         else
             s_sel_lzc <= '0';
