@@ -12,9 +12,9 @@ void write_coe(const char *instr, const char *outstr, string op_zero);
 
 int main(int argc, char *argv[]) {
 
-    write_coe("pi.mat", "pi.coe", "0000000000000000000000000");
-    write_coe("b.mat", "b.coe", "000000000000000000");
-    write_coe("tp.mat", "tp.coe", "000000000000000000");
+    write_coe("pi_bin.mat", "pi.coe", "0000000000000000000000000");
+    write_coe("b_bin.mat", "b.coe", "000000000000000000");
+    write_coe("tp_bin.mat", "tp.coe", "000000000000000000");
 
     return 0;
 }

@@ -17,7 +17,8 @@ PI_bin = zeros(N, OP1_WIDTH);
 for i=1:N,
     [PI_dec(i) PI_bin(i, :)] = float2myDec(PI(i), OP1_WIDTH);
 end
-save pi.mat PI_bin;
+save pi_bin.mat PI_bin;
+save pi.mat PI;
 % B: matrix of emission probabilities
 B = abs(rand(N, M)); % size N, M
 B = B./repmat(sum(B, 2), 1, M);
@@ -26,7 +27,8 @@ B_bin = zeros(N, OP2_WIDTH);
 for i=1:N,
     [B_dec(i) B_bin(i, :)] = float2myDec(B(i, seq_e(1)), OP2_WIDTH);
 end
-save b.mat B_bin;
+save b_bin.mat B_bin;
+save b.mat B;
 % TP: matrix of tansition probabilities
 TP = abs(rand(N, N)); % size N, N
 TP = TP./repmat(sum(TP, 2), 1, N);
@@ -36,4 +38,5 @@ TP_bin = zeros(length(TP_list), OP2_WIDTH);
 for i=1:length(TP_list),
     [TP_dec(i) TP_bin(i, :)] = float2myDec(TP_list(i), OP2_WIDTH);
 end
-save tp.mat TP_bin;
+save tp_bin.mat TP_bin;
+save tp.mat TP;
