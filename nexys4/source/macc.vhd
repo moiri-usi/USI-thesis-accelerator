@@ -42,8 +42,8 @@ begin
                     s_reg_acc <= (others => '0');
                 elsif shift_acc = '1' then
                     s_reg_acc <=
-                        ((MACC_CNT-1 downto MACC_CNT-17 => '0')
-                        & s_reg_acc(MACC_CNT-1 downto 17))
+                        ((MACC_CNT-1 downto MACC_CNT-OP2_CNT => '0')
+                        & s_reg_acc(MACC_CNT-1 downto OP2_CNT))
                         + s_reg_mul;
                 else
                     s_reg_acc <= s_reg_acc + s_reg_mul;
