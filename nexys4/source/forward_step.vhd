@@ -120,7 +120,7 @@ begin
         macc      => s_feed_back
     );
 
-    en_lzc: process(s_mul)
+    en_lzc: process(s_mul, shift_alpha_out)
     begin
         if s_mul = (MUL_WIDTH => '0') then
             s_load_lzc <= '0';

@@ -21,7 +21,7 @@ end forward_init;
 
 architecture forward_init_arch of forward_init is
 signal s_mul : std_logic_vector(MUL_WIDTH);
-signal s_reset : std_logic;
+signal s_reset, s_load_lzc : std_logic;
 
 component mul is
     port(
@@ -57,10 +57,19 @@ begin
         mul     => s_mul
     );
 
+    en_lzc: process(s_mul, store_scale_new)
+    begin
+        if s_mul = (MUL_WIDTH => '0') then
+            s_load_lzc <= '0';
+        else
+            s_load_lzc <= store_scale_new;
+        end if;
+    end process;
+
     lzc: lzc_op2 port map (
         clk      => clk,
         reset_n  => reset_n,
-        load     => store_scale_new,
+        load     => s_load_lzc,
         load_out => store_scale_ok,
         data_in  => s_mul(MUL_LZC_WIDTH),
         data_out => lzc_out
