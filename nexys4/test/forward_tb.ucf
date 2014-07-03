@@ -35,9 +35,9 @@ NET "ps_scale<4>"      	LOC = "T5"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin n
 NET "ps_scale<5>"      	LOC = "T4"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L12N_T1_MRCC_34,					Sch	name = LED5
 NET "ps_scale<6>"	LOC = "U7"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L22P_T3_34,						Sch name = LED6
 NET "ps_scale<7>"	LOC = "U6"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L22N_T3_34,						Sch name = LED7
-#NET "ps_scale<8>"	LOC = "V4"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L10N_T1_34,						Sch name = LED8
-#NET "ps_scale<9>"	LOC = "U3"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L8N_T1_34,						Sch name = LED9
-#NET "ps_scale<10>"	LOC = "V1"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L7N_T1_34,						Sch name = LED10
+NET "ps_scale<8>"	LOC = "V4"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L10N_T1_34,						Sch name = LED8
+NET "ps_scale<9>"	LOC = "U3"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L8N_T1_34,						Sch name = LED9
+NET "ps_scale<10>"	LOC = "V1"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L7N_T1_34,						Sch name = LED10
 #NET "led<11>"			LOC = "R1"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L17P_T2_34,						Sch name = LED11
 #NET "led<12>"			LOC = "P5"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L13N_T2_MRCC_34,					Sch name = LED12
 #NET "led<13>"			LOC = "U1"	| IOSTANDARD = "LVCMOS33";		#Bank = 34, Pin name = IO_L7P_T1_34,						Sch name = LED13

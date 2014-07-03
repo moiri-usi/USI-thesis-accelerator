@@ -4,6 +4,9 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use work.param_pkg.all;
 
+library unisim;
+use unisim.vcomponents.all;
+
 entity forward_tb is
     port(
         clk          : in  std_logic;
@@ -19,7 +22,7 @@ architecture tb of forward_tb is
 signal s_dispVal : std_logic_vector(63 downto 0);
 signal s_ps_scale : std_logic_vector(SCALE_WIDTH);
 signal s_ps : std_logic_vector(OP1_WIDTH);
-signal reset : std_logic;
+signal reseti, clk_int : std_logic;
 type ARRAY_VAL is array (natural range <>) of std_logic_vector(3 downto 0);
 signal s_seg : ARRAY_VAL(0 to 7);
 type ARRAY_SEG is array (natural range <>) of std_logic_vector(7 downto 0);
@@ -41,6 +44,13 @@ constant SEG_DEF : ARRAY_SEG(0 to 15) := (
     "10000110",
     "10001110"
 );
+
+component clk_100_85 is
+    port(
+       CLK_IN1       : in  std_logic;
+       CLK_OUT1      : out std_logic
+    );
+end component;
 
 component forward is
     port(
@@ -70,8 +80,13 @@ end component;
 begin
     ps_scale <= s_ps_scale;
 
+    clk_u : clk_100_85 port map(
+        CLK_IN1   => clk,
+        CLK_OUT1  => clk_int
+    );
+
     seq1: forward port map(
-        clk          => clk,
+        clk          => clk_int,
         reset_n      => reset_n,
         b_in         => (others => '0'),
         b_we         => '0',
@@ -103,7 +118,7 @@ begin
         & SEG_DEF(to_integer(unsigned(s_seg(7))));
 
     Disp: sSegDisplay port map(
-        ck       => clk,
+        ck       => clk_int,
         number   => s_dispVal, -- 64-bit
         seg      => seg_o,
         an       => an_o
