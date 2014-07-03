@@ -30,7 +30,7 @@ package param_pkg is
     subtype  N_RAM_RANGE is integer range 0 to N_RAM_CNT-1;
     constant N_LOG_RAM_CNT : integer := integer(ceil(log2(real(N_RAM_CNT))));
     subtype  N_LOG_RAM_RANGE is integer range 0 to N_LOG_RAM_CNT-1;
-    constant N_CNT : integer := 3;
+    constant N_CNT : integer := 100;
     subtype  N_RANGE is integer range 0 to N_CNT-1;
     constant N_LOG_CNT : integer := integer(ceil(log2(real(N_CNT))));
     subtype  N_LOG_RANGE is integer range 0 to N_LOG_CNT-1;
