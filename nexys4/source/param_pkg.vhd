@@ -9,9 +9,9 @@ package param_pkg is
     subtype  OP1_WIDTH is integer range OP1_CNT-1 downto 0;
     constant OP1_LOG_CNT : integer := integer(ceil(log2(real(OP1_CNT))));
     subtype  OP1_LOG_WIDTH is integer range OP1_LOG_CNT-1 downto 0;
-    constant OP2_CNT : integer := 18;
-    constant OP2_CNT_12 : integer := 9;
-    constant OP2_CNT_22 : integer := 9;
+    constant OP2_CNT : integer := 25;
+    constant OP2_CNT_12 : integer := 13;
+    constant OP2_CNT_22 : integer := 12;
     subtype  OP2_WIDTH is integer range OP2_CNT-1 downto 0;
     constant OP2_LOG_CNT : integer := integer(ceil(log2(real(OP2_CNT))));
     subtype  OP2_LOG_WIDTH is integer range OP2_LOG_CNT-1 downto 0;
@@ -20,17 +20,17 @@ package param_pkg is
     subtype  MUL_MOST_WIDTH is integer range MUL_CNT-1 downto MUL_CNT-OP1_CNT;
     subtype  MUL_LZC_WIDTH is integer range MUL_CNT-1 downto MUL_CNT-OP2_CNT;
     subtype  MUL_LEAST_WIDTH is integer range OP1_CNT-1 downto 0;
-    constant MACC_CNT : integer := MUL_CNT+5;
+    constant MACC_CNT : integer := MUL_CNT;
     subtype  MACC_WIDTH is integer range MACC_CNT-1 downto 0;
     subtype  MACC_MOST_WIDTH is integer range MUL_CNT-1 downto MUL_CNT-OP1_CNT;
     subtype  MACC_LEAST_WIDTH is integer range OP1_CNT-1 downto 0;
     subtype  MACC_LOW_WIDTH is integer range OP2_CNT-1 downto 0;
     -- Constants
-    constant N_RAM_CNT : integer := 128;
+    constant N_RAM_CNT : integer := 256;
     subtype  N_RAM_RANGE is integer range 0 to N_RAM_CNT-1;
     constant N_LOG_RAM_CNT : integer := integer(ceil(log2(real(N_RAM_CNT))));
     subtype  N_LOG_RAM_RANGE is integer range 0 to N_LOG_RAM_CNT-1;
-    constant N_CNT : integer := 100;
+    constant N_CNT : integer := 200;
     subtype  N_RANGE is integer range 0 to N_CNT-1;
     constant N_LOG_CNT : integer := integer(ceil(log2(real(N_CNT))));
     subtype  N_LOG_RANGE is integer range 0 to N_LOG_CNT-1;
@@ -40,7 +40,7 @@ package param_pkg is
     constant NN_LOG_RAM_CNT : integer := N_LOG_RAM_CNT + N_LOG_RAM_CNT;
     subtype  NN_LOG_RANGE is integer range 0 to NN_LOG_CNT-1;
     subtype  NN_LOG_RAM_RANGE is integer range 0 to NN_LOG_RAM_CNT-1;
-    constant L_CNT : integer := 10;
+    constant L_CNT : integer := 20;
     subtype  L_RANGE is integer range 0 to L_CNT-1;
     constant L_LOG_CNT : integer := integer(ceil(log2(real(L_CNT))));
     subtype  L_LOG_RANGE is integer range 0 to L_LOG_CNT-1;

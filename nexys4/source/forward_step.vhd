@@ -83,8 +83,9 @@ begin
     with sel_op1 select
         s_op1 <= s_fifo_out                       when "000",  -- next alpha
                  s_feed_back(MACC_MOST_WIDTH)     when "001",  -- higher part to shift
-                 (OP1_CNT-OP2_CNT-1 downto 0 => '0')
-                    & s_feed_back(MACC_LOW_WIDTH) when "010",  -- lower part to shift
+   --              (OP1_CNT-OP2_CNT-1 downto 0 => '0')
+   --                 & s_feed_back(MACC_LOW_WIDTH) when "010",  -- lower part to shift
+                 s_feed_back(MACC_LOW_WIDTH)      when "010",  -- lower part to shift
                  s_feed_back(MACC_LEAST_WIDTH)    when "100",  -- shiftet val to mul
                  (others => '0')                  when others; -- conciliate
 

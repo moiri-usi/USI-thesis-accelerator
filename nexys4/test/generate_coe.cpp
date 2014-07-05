@@ -7,14 +7,22 @@
 using namespace std;
 
 #define COMMENT_LINE_CNT 5
+#define OP1 25
+#define OP2 25
 
 void write_coe(const char *instr, const char *outstr, string op_zero);
 
 int main(int argc, char *argv[]) {
-
-    write_coe("pi_bin.mat", "pi.coe", "0000000000000000000000000");
-    write_coe("b_bin.mat", "b.coe", "000000000000000000");
-    write_coe("tp_bin.mat", "tp.coe", "000000000000000000");
+    int i;
+    char init_op1[OP1+1];
+    char init_op2[OP2+1];
+    for (i=0; i<OP1; i++)
+        init_op1[i] = '0';
+    for (i=0; i<OP2; i++)
+        init_op2[i] = '0';
+    write_coe("pi_bin.mat", "pi.coe", init_op1);
+    write_coe("b_bin.mat", "b.coe", init_op2);
+    write_coe("tp_bin.mat", "tp.coe", init_op2);
 
     return 0;
 }
