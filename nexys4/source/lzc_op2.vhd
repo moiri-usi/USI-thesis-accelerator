@@ -1,3 +1,13 @@
+--------------------------------------------------------------------------------
+-- Leading Zero Counter of Operand 2.                                         --
+--                                                                            --
+-- Master's Thesis Project 2014                                               --
+-- Università della Svizzera Italiana                                         --
+-- Master of Science in Informatics, Embedded System Design                   --
+--                                                                            --
+-- 05.07.2014, Simon Maurer                                                   --
+--------------------------------------------------------------------------------
+
 library ieee;
 use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;

@@ -1,3 +1,13 @@
+--------------------------------------------------------------------------------
+-- Register for LZC Values of Operand 2 with Asyncronous Reset                              --
+--                                                                            --
+-- Master's Thesis Project 2014                                               --
+-- Università della Svizzera Italiana                                         --
+-- Master of Science in Informatics, Embedded System Design                   --
+--                                                                            --
+-- 05.07.2014, Simon Maurer                                                   --
+--------------------------------------------------------------------------------
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
